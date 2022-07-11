@@ -1,6 +1,6 @@
 Cloning Submodules 📂
-npm run clone-submodules
+  npm run clone-submodules
 Installing Dependencies 📦
-npm run setup
+  npm run setup
 Starting Application 🎉 ✨
-npm start or npm run start
+  npm start or npm run start
