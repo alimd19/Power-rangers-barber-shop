@@ -14,12 +14,14 @@ import {
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import { UserContext } from "../../contexts/UserContext";
 import { Link, useMatch, useNavigate, useResolvedPath } from "react-router-dom";
+import { useLogout } from "../../hooks/useLogout";
 
 const drawerWidth = 240;
 
 export default function NavBar({ children }) {
   const navigate = useNavigate();
-  const { user, updateUser } = useContext(UserContext);
+  const { user } = useContext(UserContext);
+  const { logout } = useLogout();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -27,7 +29,7 @@ export default function NavBar({ children }) {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
-    updateUser("REMOVE_USER", {});
+    logout();
     setAnchorEl(null);
     navigate("/");
   };
@@ -46,7 +48,7 @@ export default function NavBar({ children }) {
             </Typography>
           </Box>
           <Typography variant="h6" component="div">
-            {user.name}
+            {user.email}
           </Typography>
           <IconButton aria-label="user-icon" onClick={handleClick}>
             <AccountBoxIcon fontSize="large" />
@@ -77,7 +79,7 @@ export default function NavBar({ children }) {
           }}
         >
           <Toolbar />
-          <Box className="user-nav" >
+          <Box className="user-nav">
             <List>
               {[
                 { link: "Appointments", path: "/appointment" },

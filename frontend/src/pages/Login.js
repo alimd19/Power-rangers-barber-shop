@@ -1,13 +1,12 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
-import { useNavigate } from "react-router-dom";
-import { UserContext } from "../contexts/UserContext";
+import { useLogin } from "../hooks/useLogin";
 
 const Login = () => {
-  const navigate = useNavigate();
-  const { updateUser } = useContext(UserContext);
+  
+  const { login, error, isLoading } = useLogin();
 
-  const [login, setLogin] = useState({
+  const [user, setUser] = useState({
     email: "",
     password: "",
     remember: false,
@@ -18,18 +17,19 @@ const Login = () => {
     if (name === "remember") {
       value = !login.remember;
     }
-    setLogin((prev) => ({ ...prev, [name]: value }));
+    setUser((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = () => {
-    const currentUser = { name: login.email };
-    updateUser("SET_USER", currentUser);
-    setLogin({
+    login({ email: user.email, password: user.password });
+
+    setUser({
       email: "",
       password: "",
       remember: false,
     });
-    navigate("/appointment");
+
+    
   };
   return (
     <div>
@@ -43,7 +43,7 @@ const Login = () => {
               <input
                 type="email"
                 name="email"
-                value={login.email}
+                value={user.email}
                 id="email"
                 className="form__input"
                 placeholder="Email"
@@ -58,7 +58,7 @@ const Login = () => {
                 className="form__input"
                 type="password"
                 name="password"
-                value={login.password}
+                value={user.password}
                 id="password"
                 placeholder="Password"
                 onChange={handleChange}
@@ -85,10 +85,12 @@ const Login = () => {
               className="btn"
               variant="outline-primary"
               onClick={handleSubmit}
+              disabled={isLoading}
             >
               Sign In
             </Button>
           </div>
+          {error && <div>{error}</div>}
         </div>
       </div>
     </div>

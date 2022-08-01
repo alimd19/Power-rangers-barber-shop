@@ -1,24 +1,25 @@
-import { createContext } from "react";
-import { useState } from "react";
+import { useReducer, createContext } from "react";
 
-export const UserContext = createContext({ name: "" });
+export const UserContext = createContext();
+
+export const authReducer = (state, action) => {
+  switch (action.type) {
+    case "LOGIN":
+      return { user: action.payload };
+    case "LOGOUT":
+      return { user: null };
+    default:
+      return state;
+  }
+};
 
 const UserProvider = ({ children }) => {
-  const [user, setUser] = useState({ name: "" });
-  const updateUser = (actionType, payload) => {
-    switch (actionType) {
-      case "SET_USER":
-        setUser((prev) => ({ ...prev, ...payload }));
-        return;
-      case "REMOVE_USER":
-        setUser({ name: "" });
-        return;
-      default:
-        return;
-    }
-  };
+  const [state, dispatch] = useReducer(authReducer, {
+    user: null,
+  });
+
   return (
-    <UserContext.Provider value={{user, updateUser}}>
+    <UserContext.Provider value={{ ...state, dispatch }}>
       {children}
     </UserContext.Provider>
   );

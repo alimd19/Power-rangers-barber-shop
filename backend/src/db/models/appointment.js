@@ -1,11 +1,10 @@
 const mongoose = require("mongoose");
-const { ServiceSchema } = require("./service");
 
 const AppointmentSchema = new mongoose.Schema({
   barber: { type: mongoose.Types.ObjectId, ref: "User", required: true },
   customer: { type: mongoose.Types.ObjectId, ref: "User", required: true },
   date: { type: Date, required: true },
-  time: {
+  timeSlot: {
     startTime: {
       type: Number,
       required: true,

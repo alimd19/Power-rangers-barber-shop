@@ -1,12 +1,10 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
-import { Link, useNavigate } from "react-router-dom";
-import { UserContext } from "../contexts/UserContext";
+import { Link } from "react-router-dom";
+import { useSignup } from "../hooks/useSignup";
 
 const Register = () => {
-  const navigate = useNavigate();
-
-  const { updateUser } = useContext(UserContext);
+  const { signup, isLoading, error } = useSignup();
   const [user, setUser] = useState({
     fname: "",
     lname: "",
@@ -21,9 +19,18 @@ const Register = () => {
     setUser((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = () => {
-    const currentUser = { name: [user.fname] };
-    updateUser("SET_USER", currentUser);
+  const handleSubmit = async () => {
+    const userData = {
+      fname: user.fname,
+      lname: user.lname,
+      email: user.email,
+      password: user.password1,
+      userType: "cs",
+      phone: user.phone,
+    };
+
+    await signup(userData);
+
     setUser({
       fname: "",
       lname: "",
@@ -32,7 +39,6 @@ const Register = () => {
       password1: "",
       password2: "",
     });
-    navigate("/appointment");
   };
 
   return (
@@ -62,7 +68,7 @@ const Register = () => {
               name="lname"
               id="lastName"
               className="form__input"
-              placeholder="LastName"
+              placeholder="Last Name"
               value={user.lname}
               onChange={handleChange}
             />
@@ -135,10 +141,12 @@ const Register = () => {
             className="btn"
             variant="outline-primary"
             onClick={handleSubmit}
+            disabled={isLoading}
           >
             Register
           </Button>
         </div>
+        {error && <div>{error}</div>}
       </div>
     </div>
   );

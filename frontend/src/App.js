@@ -6,11 +6,11 @@ import HomePage from "./pages/HomePage";
 import AboutUs from "./pages/AboutUs";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import  {createTheme, ThemeProvider} from '@mui/material/styles';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import EditProfile from './components/EditProfile';
-import ViewCancelAppointment from './components/ViewCancelAppointment';
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import EditProfile from "./components/EditProfile";
+import ViewCancelAppointment from "./components/ViewCancelAppointment";
 import BookAppointment from "./components/BookAppointment";
 import MyBooking from "./components/MyBooking";
 
@@ -54,41 +54,43 @@ const theme = createTheme({
     MuiInputLabel: {
       styleOverrides: {
         root: {
-          color
-        }
-      }
+          color,
+        },
+      },
     },
-    MuiFormHelperText:{
-      styleOverrides:{
-        root:{
-          color
-        }
-      }
-    }
-  }
-})
+    MuiFormHelperText: {
+      styleOverrides: {
+        root: {
+          color,
+        },
+      },
+    },
+  },
+});
 
 function App() {
   return (
     <>
-       <ThemeProvider theme={theme}>
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <UserProvider>
-        <Layout>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/about" element={<AboutUs />} />
-            <Route path="/log-in" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/booking" element={<BookAppointment />} />
-            <Route path="/profile" element={<EditProfile/>}></Route>
-            <Route path="/appointmenthistory" element={<ViewCancelAppointment />}></Route>
-            <Route path="/appointment" element={<MyBooking />}></Route>
-            
-          </Routes>
-        </Layout>
-      </UserProvider>
-      </LocalizationProvider>
+      <ThemeProvider theme={theme}>
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <UserProvider>
+            <Layout>
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/about" element={<AboutUs />} />
+                <Route path="/log-in" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/booking" element={<BookAppointment />} />
+                <Route path="/profile" element={<EditProfile />}></Route>
+                <Route
+                  path="/appointmenthistory"
+                  element={<ViewCancelAppointment />}
+                ></Route>
+                <Route path="/appointment" element={<MyBooking />}></Route>
+              </Routes>
+            </Layout>
+          </UserProvider>
+        </LocalizationProvider>
       </ThemeProvider>
     </>
   );

@@ -12,11 +12,13 @@ const UserSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
+    unique: true,
   },
   password: {
     type: String,
     required: true,
   },
+  phone: { type: String, required: true, unique: true },
   userType: { type: String, enum: ["mg", "bb", "cs"], required: true },
 });
 
