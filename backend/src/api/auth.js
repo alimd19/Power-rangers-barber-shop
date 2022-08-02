@@ -7,7 +7,7 @@ const { User } = require("../db/models");
 
 // jwt generator function
 const createToken = (id, userType) => {
-  const newToken = jwt.sign({ id, userType }, process.env.SECRECT, {
+  const newToken = jwt.sign({ id, userType }, "powerrangers", {
     expiresIn: "1h",
   });
   return newToken;
