@@ -2,7 +2,7 @@ Installing Dependencies 📦
 **npm run setup**
 
 Starting Application 🎉 ✨
-**npm start or npm run start**
+**npm run dev**
 
 Starting production Application 
-**npm run start:dev**
+**npm run prod**

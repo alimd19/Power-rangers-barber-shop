@@ -7,16 +7,23 @@ export const authReducer = (state, action) => {
     case "LOGIN":
       return { user: action.payload };
     case "LOGOUT":
-      return { user: null };
+      return { user: {} };
     default:
       return state;
   }
 };
 
 const UserProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(authReducer, {
-    user: null,
-  });
+  const [state, dispatch] = useReducer(
+    authReducer,
+    {
+      user: {},
+    },
+    () => {
+      const localData = localStorage.getItem("user");
+      return localData ? {user: JSON.parse(localData)} : { user: {} };
+    }
+  );
 
   return (
     <UserContext.Provider value={{ ...state, dispatch }}>

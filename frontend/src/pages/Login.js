@@ -3,7 +3,6 @@ import Button from "react-bootstrap/Button";
 import { useLogin } from "../hooks/useLogin";
 
 const Login = () => {
-  
   const { login, error, isLoading } = useLogin();
 
   const [user, setUser] = useState({
@@ -28,8 +27,6 @@ const Login = () => {
       password: "",
       remember: false,
     });
-
-    
   };
   return (
     <div>
