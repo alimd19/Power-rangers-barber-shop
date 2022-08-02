@@ -2,14 +2,14 @@ const router = require("express").Router();
 const { Appointment } = require("../db/models");
 
 // find appointments by user id (barber or customer)
-router.get("/getAppointments/", async (req, res, next) => {
+router.get("/getAppointment", async (req, res, next) => {
   const { type, userId } = req.query;
 
   if (!userId || !type || userId == "undefined") {
     res.status(400).json({ message: "Please provide a user id and type" });
     return;
   }
-   
+    
   const appointments = await Appointment.find({ [type]: userId })
     .populate({
       path: "barber",

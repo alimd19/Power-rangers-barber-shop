@@ -1,4 +1,4 @@
-import { useReducer, createContext, useEffect } from "react";
+import { useReducer, createContext } from "react";
 
 export const UserContext = createContext();
 

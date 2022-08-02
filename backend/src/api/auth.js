@@ -68,7 +68,7 @@ router.post("/signup", async (req, res, next) => {
     res.status(400).json({ message: "Email already in use" });
     return;
   }
-   
+
   // encrypting/hashing password
   const salt = await bcrypt.genSalt(10);
   const hash = await bcrypt.hash(password, salt);
@@ -91,6 +91,6 @@ router.post("/signup", async (req, res, next) => {
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
-}); 
+});
 
 module.exports = router;
