@@ -60,7 +60,7 @@ const BookAppointment = () => {
        if(appointmentDate)
        {
           const day=appointmentDate.getDay();
-          console.log(json)
+          console.log(json);
         }
       })
       .catch((err) => {
