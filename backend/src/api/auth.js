@@ -38,7 +38,7 @@ router.post("/login", async (req, res, next) => {
     // creating token
     const token = createToken(user._id, user.userType);
 
-    res.status(200).json({ email, token });
+    res.status(200).json({ id: user._id, email, token });
   }
 });
 
@@ -68,7 +68,7 @@ router.post("/signup", async (req, res, next) => {
     res.status(400).json({ message: "Email already in use" });
     return;
   }
-
+   
   // encrypting/hashing password
   const salt = await bcrypt.genSalt(10);
   const hash = await bcrypt.hash(password, salt);
@@ -87,10 +87,10 @@ router.post("/signup", async (req, res, next) => {
     // creating token
     const token = createToken(user._id, user.userType);
 
-    res.status(200).json({ email, token });
+    res.status(200).json({ id: user._id, email, token });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
-});
+}); 
 
 module.exports = router;

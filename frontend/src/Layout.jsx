@@ -8,7 +8,7 @@ const Layout = ({ children }) => {
   const { user } = useContext(UserContext);
   return (
     <>
-      { user ? (
+      { user.id ? (
         <UserNavBar>{children}</UserNavBar>
       ) : (
         <>

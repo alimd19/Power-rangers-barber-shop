@@ -1,82 +1,56 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-
-// const myBooking=[
-//     {
-//         bookingId:1,
-//         customerId:23,
-//         name:'Nirmal Panchal Mayur',
-//         date:'25-07-1996',
-//         time:'5:00 pm - 5:30 pm'
-//     },
-//     {
-//         bookingId:2,
-//         customerId:23,
-//         name:'Bina Mayur Panchal',
-//         date:'25-07-1996',
-//         time:'5:00 pm - 5:30 pm'
-//     },
-//     {
-//         bookingId:3,
-//         customerId:23,
-//         name:'Manushi Desai',
-//         date:'25-07-1996',
-//         time:'5:00 pm - 5:30 pm'
-//     }
-// ]
+import { UserContext } from "../contexts/UserContext";
+import { useNavigate } from "react-router-dom";
 
 const MyBooking = () => {
-  const [myBooking, setBooking] = useState([]);
-
+  const navigate = useNavigate();
+  const [bookings, setBookings] = useState([]);
+  const { user } = useContext(UserContext);
   useEffect(() => {
-    fetch("http://localhost:3030/api/appointment/getAppointment")
+    fetch(
+      `/api/appointment/getAppointments?type=customer&userId=${user.id}`
+    )
       .then((res) => {
         return res.json();
       })
       .then((json) => {
-        setBooking(json.appointments);
+        setBookings(json.appointments);
       })
       .catch((err) => {
-        console.log(`Error ${err}`);
+        console.log(err.message);
       });
   }, []);
 
-  return (
-    <div>
-      <Typography
-        variant="h5"
-        sx={{ marginTop: 3, marginBottom: 2, color: "black" }}
-      >
-        Upcoming Booking Details
-      </Typography>
-      {myBooking.map((mybooking) => {
-        const customer = fetch(
-          `http://localhost:3030/api/user/getUser/${mybooking.customer}`
-        )
-          .then((res) => {
-            return res.json();
-          })
-          .then((json) => {
-            return json.user;
-          })
-          .catch((err) => {
-            console.log(`Error ${err}`);
-          });
-         
-        return (
-          <div className="bookingcard">
-            <Typography variant="h4">{}</Typography>
-            <Typography variant="h5">Booking Id: {mybooking._id}</Typography>
-            <Typography variant="h5">Date: {mybooking.date}</Typography>
-            <Typography variant="h5">
-              Time: {mybooking.timeSlot.startTime}
-            </Typography>
-          </div>
-        );
-      })}
-    </div>
-  );
+  if (user.id) {
+    return (
+      <div>
+        <Typography
+          variant="h5"
+          sx={{ marginTop: 3, marginBottom: 2, color: "black" }}
+        >
+          Upcoming Booking Details
+        </Typography>
+        {bookings.map((booking) => {
+          return (
+            <div className="bookingcard" key={booking._id}>
+              <Typography variant="h5">
+                Barber: {booking.barber.fname + " " + booking.barber.lname}
+              </Typography>
+              <Typography variant="h5">Booking Id: {booking._id}</Typography>
+              <Typography variant="h5">Date: {booking.date}</Typography>
+              <Typography variant="h5">
+                Time: {booking.timeSlot.startTime} - {booking.timeSlot.endTime}
+              </Typography>
+            </div>
+          );
+        })}
+      </div>
+    );
+  } else {
+    navigate("/");
+  }
 };
 
 export default MyBooking;
