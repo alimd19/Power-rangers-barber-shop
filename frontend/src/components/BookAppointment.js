@@ -1,39 +1,45 @@
-import React, { useState,useEffect,useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { Button, MenuItem, TextField } from "@mui/material";
 import { UserContext } from "../contexts/UserContext";
+import { useNavigate } from "react-router-dom";
+
 
 const BookAppointment = () => {
   const { user } = useContext(UserContext);
-  const [loggedInUser, setLoggedInUser] =useState({});
-  const [appointment,setAppointment]=useState({timeSlot:{}})
-  const [services, setServices]=useState([]);
-  const [appointmentDate,setAppointmentDate]=useState(new Date());
-  const [barbers, setBarbers]=useState([]);
-
+  const navigate = useNavigate();
+  const [loggedInUser, setLoggedInUser] = useState({});
+  const [appointment, setAppointment] = useState({})
+  const [timeSlot, setTimeSlot] = useState({});
+  const [services, setServices] = useState([]);
+  const [appointmentDate, setAppointmentDate] = useState(new Date());
+  const [barbers, setBarbers] = useState([]);
+  const [message,setMessage]= useState("");
   useEffect(() => {
+    const todaysDate = appointmentDate.getDate() + "/" + (appointmentDate.getMonth() + 1) + "/" + appointmentDate.getFullYear();
+    setAppointment(appointment => ({ ...appointment, 'date': todaysDate }));
     fetch(`http://localhost:3030/api/user/getUserByEmail/${user.email}`)
-    .then((res) => {
-      return res.json();
-    })
-    .then((json) => {
-      setLoggedInUser(json.users[0])
-      console.log(json.users[0])
-    })
-    .catch((err) => {
-      console.log(`Error ${err}`);
-    });
+      .then((res) => {
+        return res.json();
+      })
+      .then((json) => {
+        setLoggedInUser(json.users[0])
+        console.log(json.users[0])
+      })
+      .catch((err) => {
+        console.log(`Error ${err}`);
+      });
     fetch("http://localhost:3030/api/user/getUserByType/bb")
-    .then((res) => {
-      return res.json();
-    })
-    .then((json) => {
-      setBarbers(json.user)
-    })
-    .catch((err) => {
-      console.log(`Error ${err}`);
-    });
-        fetch("http://localhost:3030/api/service/getService")
+      .then((res) => {
+        return res.json();
+      })
+      .then((json) => {
+        setBarbers(json.user)
+      })
+      .catch((err) => {
+        console.log(`Error ${err}`);
+      });
+    fetch("http://localhost:3030/api/service/getService")
       .then((res) => {
         return res.json();
       })
@@ -45,34 +51,73 @@ const BookAppointment = () => {
       });
   }, []);
 
-  const handleChange=(event)=>{
-    setAppointment(appointment=>({...appointment,['customer']:loggedInUser._id}))
+  const handleChange = (event) => {
+    setAppointment(appointment => ({ ...appointment, 'customer': loggedInUser._id }))
     console.log(event)
     const name = event.target.name;
     const value = event.target.value;
-    if(event.target.name==='barber')
+    if (event.target.name === 'barber') {
+      fetch(`http://localhost:3030/api/schedule/getScheduleBybarber/${event.target.value}`)
+        .then((res) => {
+          return res.json();
+        })
+        .then((json) => {
+          const schedules = json.schedules[0];
+          if (appointmentDate) {
+            const day = appointmentDate.getDay();
+          }
+        })
+        .catch((err) => {
+          console.log(`Error ${err}`);
+        });
+    }
+    setAppointment(appointment => ({ ...appointment, [name]: value }))
+  }
+
+  const handleStartTimeChange = (event) => {
+    setTimeSlot((timeSlot) => ({ ...timeSlot, startTime: event.target.value }))
+    
+  }
+
+  const handleSelectedService=(event)=>{
+    const services=[];
+    if(!services.includes(event.target.value))
     {
-      fetch(`http://localhost:3030/api/schedule/getScheduleById/${event.target.value}`)
+      services.push(event.target.value);
+    }
+    setAppointment((appointment)=>({...appointment,services}))
+  }
+
+  const handleEndTimeChange = (event) => {
+    console.log(event.target.value)
+    setTimeSlot((timeSlot) => ({ ...timeSlot, endTime: event.target.value }));
+  }
+
+  const populateAppointments=()=>{
+    setAppointment(appointment => ({ ...appointment,timeSlot:timeSlot ,'status': "scheduled"}))
+  }
+  const submitHandler = (evt) => {
+    evt.preventDefault();
+    console.log(appointment)
+    fetch("http://localhost:3030/api/appointment/createAppointment",{
+      method:"POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(appointment),
+    })
       .then((res) => {
-        return res.json();
-      })
-      .then((json) => {
-       if(appointmentDate)
-       {
-          const day=appointmentDate.getDay();
-          console.log(json);
+        if(res.ok)
+        {
+          setMessage("Your booking is confirmed!!!")
+          navigate("/appointment")
+        }else
+        {
+          setMessage("Booking Not Confirmed")
         }
       })
       .catch((err) => {
         console.log(`Error ${err}`);
       });
-    }
-    setAppointment(appointment => ({...appointment, [name]: value}))
-  }
 
-  const submitHandler=(evt)=>{
-    evt.preventDefault();
-    console.log(appointment)
   }
   return (
     <div className="bookappointment">
@@ -85,8 +130,8 @@ const BookAppointment = () => {
                 value={appointmentDate}
                 InputProps={{ style: { width: 400 } }}
                 onChange={(newValue) => {
-                  const appointmentdate = newValue.getDate() +"/"+newValue.getMonth() + 1 +"/"+newValue.getFullYear();
-                  setAppointment((appointment)=> ({...appointment,["date"]:appointmentdate}));
+                  const appointmentdate = newValue.getDate() + "/" + (newValue.getMonth() + 1) + "/" + newValue.getFullYear();
+                  setAppointment((appointment) => ({ ...appointment, "date": appointmentdate }));
                   setAppointmentDate(newValue);
                 }}
                 renderInput={(params) => <TextField {...params} />}
@@ -95,13 +140,13 @@ const BookAppointment = () => {
           </div>
         </div>
         <div>
-        <div className="bookingfield">
+          <div className="bookingfield">
             <TextField
               select
               label="Service Type"
-              name="serviceType"
-              value={appointment.serviceType}
-              onChange={handleChange}
+              name="services"
+              value={appointment.services}
+              onChange={handleSelectedService}
               style={{ width: 400 }}
               helperText="Please select the service"
             >
@@ -113,7 +158,7 @@ const BookAppointment = () => {
             </TextField>
           </div>
           <div className="bookingfield">
-          <TextField
+            <TextField
               select
               label="Barber's Name"
               name="barber"
@@ -128,28 +173,29 @@ const BookAppointment = () => {
                 </MenuItem>
               ))}
             </TextField>
-            
+
           </div>
         </div>
         <div>
           <div className="bookingfield">
-        <TextField
+            <TextField
               variant="outlined"
               style={{ width: 400 }}
               label="Start Time"
               name="startTime"
-              onChange={handleChange}
-              value={appointment.timeSlot.startTime}
+              onChange={handleStartTimeChange}
+              value={timeSlot.startTime}
             ></TextField>
             <TextField
               variant="outlined"
               style={{ width: 400 }}
               label="End Time"
               name="endTime"
-              onChange={handleChange}
-              value={appointment.timeSlot.endTime}
+              onChange={handleEndTimeChange}
+              onBlur={populateAppointments}
+              value={timeSlot.endTime}
             ></TextField>
-            </div>
+          </div>
         </div>
         <div className="book">
           <Button variant="contained" type="submit">
@@ -157,6 +203,8 @@ const BookAppointment = () => {
           </Button>
         </div>
       </form>
+
+      <div>{message}</div>
     </div>
   );
 };

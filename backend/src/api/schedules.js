@@ -6,10 +6,10 @@ router.get("/getSchedule", async (req, res, next) => {
   res.send({ schedules });
 });
 
-router.get("/getScheduleById/:id", async (req, res, next) => {
-  const id= req.params.id;
+router.get("/getScheduleBybarber/:barber", async (req, res, next) => {
+  const barber= req.params.barber;
   try{
-    const schedules = await Schedule.findById(id).exec();
+    const schedules = await Schedule.find({barber:barber}).exec();
     res.status(200).json({schedules})
   }catch(err)
   {
