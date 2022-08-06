@@ -3,8 +3,12 @@ const { User } = require("../db/models");
 
 router.get("/getUser/:id", async (req, res, next) => {
   const id = req.params.id;
-  const user = await User.findById(id).exec();
-  res.send({ user });
+  try {
+    const user = await User.findById(id);
+    res.status(200).json({ user });
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
 });
 
 router.get("/getUserByType/:usertype", async (req, res, next) => {
