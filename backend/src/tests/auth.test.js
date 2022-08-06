@@ -89,7 +89,7 @@ describe("signup", () => {
       userType: "cs",
     });
 
-    await request.delete(`/api/auth/delete/${res.body.id}`);
+    await request.delete(`/api/user/deleteUser/${res.body.id}`);
 
     expect(res.statusCode).toBe(200);
     expect(res.body.email).toBe("a.camplle@powerrangers.com");

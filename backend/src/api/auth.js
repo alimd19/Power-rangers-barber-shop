@@ -97,18 +97,4 @@ router.post("/signup", async (req, res, next) => {
   }
 });
 
-// delete user by ID for testing
-router.delete("/delete/:id", async (req, res, next) => {
-  const id = req.params.id;
-  try {
-    await User.deleteOne({ _id: id });
-    res
-      .status(200)
-      .json({ message: `User with id: ${id} deleted successfully!` });
-  } catch (err) {
-    res.status(400).json({ message: err.message });
-    return;
-  }
-});
-
 module.exports = router;
