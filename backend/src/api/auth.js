@@ -38,7 +38,9 @@ router.post("/login", async (req, res, next) => {
     // creating token
     const token = createToken(user._id, user.userType);
 
-    res.status(200).json({ id: user._id, email, token });
+    res
+      .status(200)
+      .json({ id: user._id, email, token, userType: user.userType });
   }
 });
 
@@ -57,10 +59,10 @@ router.post("/signup", async (req, res, next) => {
     return;
   }
 
-  // if (!validator.isStrongPassword(password)) {
-  //   res.status(400).json({ message: "Please use a strong password" });
-  //   return;
-  // }
+  if (!validator.isStrongPassword(password)) {
+    res.status(400).json({ message: "Please use a strong password" });
+    return;
+  }
 
   const exists = await User.findOne({ email });
 
@@ -87,9 +89,25 @@ router.post("/signup", async (req, res, next) => {
     // creating token
     const token = createToken(user._id, user.userType);
 
-    res.status(200).json({ id: user._id, email, token });
+    res
+      .status(200)
+      .json({ id: user._id, email, token, userType: user.userType });
   } catch (err) {
     res.status(400).json({ error: err.message });
+  }
+});
+
+// delete user by ID for testing
+router.delete("/delete/:id", async (req, res, next) => {
+  const id = req.params.id;
+  try {
+    await User.deleteOne({ _id: id });
+    res
+      .status(200)
+      .json({ message: `User with id: ${id} deleted successfully!` });
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+    return;
   }
 });
 
