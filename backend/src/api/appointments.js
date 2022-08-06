@@ -33,4 +33,12 @@ router.post("/createAppointment", async (req, res, next) => {
   }
 });
 
+router.put("/deleteAppointment",async(req,res,next)=>{
+  const id=req.query.id;
+ await Appointment.updateOne({_id:id},
+  [
+  { $set: { status:"cancelled"} }
+  ]);
+})
+
 module.exports = router;
