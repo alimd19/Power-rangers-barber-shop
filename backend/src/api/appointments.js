@@ -20,7 +20,7 @@ router.get("/getAppointment", async (req, res, next) => {
       select: ["name"], 
     });
 
-  res.json({ appointments });
+  res.json({ appointments }).status(200);
 });
 function isNumeric(num){
   return !isNaN(num)
@@ -28,7 +28,7 @@ function isNumeric(num){
 
 router.post("/createAppointment", async (req, res, next) => {
  
-  const appointments = await Appointment.create(req.body);
+  
    let userTime =new Date(req.body.date);
    let serverTime =new Date()
    serverTime.setDate(serverTime.getDate()-1)
@@ -36,11 +36,9 @@ router.post("/createAppointment", async (req, res, next) => {
    let endTime = req.body.timeSlot.endTime;
    let barber=req.body.barber;
    let service=req.body.services;
-console.log(barber.length);
-console.log(isNumeric(endTime)+"kjo");
-console.log(isNumeric(startTime)+"Ajo")
 
-if(barber.length===0 && Object.keys(service).length === 0 && endTime.length===0 && startTime===0){
+
+if(barber.length===0 || Object.keys(service).length === 0 || endTime.length===0 || startTime===0){
   res.status(400).json({ message: "Don't leave empty fields" });
 }else{
   if (userTime < serverTime ) {
@@ -52,7 +50,9 @@ if(barber.length===0 && Object.keys(service).length === 0 && endTime.length===0 
       let parsEndTime=parseInt(endTime, 10)
       let parsStartTime=parseInt(startTime, 10)
       if(parsEndTime>parsStartTime){
-        res.send({ appointments });
+        const appointments = await Appointment.create(req.body);
+        res.send({ appointments }).status(200);
+        console.log(appointments)
       }else{
         res.status(400).json({ message: "Please the Start Time should be smaller then the End Time" });
       }
