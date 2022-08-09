@@ -35,6 +35,7 @@ router.get("/getUserByEmail/:email", async (req, res, next) => {
 router.delete("/deleteUser/:id", async (req, res, next) => {
   const id = req.params.id;
   console.log(id);
+
   try {
     await User.deleteOne({ _id: id });
     res
@@ -51,6 +52,7 @@ router.put("/updateUser/:id", async (req, res, next) => {
   console.log(id);
 
   try {
+    console.log("Erdhi")
     await User.updateOne({ _id: id }, [
       {
         $set: {

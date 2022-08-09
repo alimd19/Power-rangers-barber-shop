@@ -65,10 +65,16 @@ if(barber.length===0 || Object.keys(service).length === 0 || endTime.length===0 
 
 router.put("/deleteAppointment",async(req,res,next)=>{
   const id=req.query.id;
+  try{
  await Appointment.updateOne({_id:id},
   [
   { $set: { status:"cancelled"} }
   ]);
+  res.status(200).json({message:"Appointment cancelled successfuly !"});
+  }catch (err) {
+    res.status(400).json({ message: "Your appointment could not be cancelled!" });
+    return;
+  }
 })
 
 module.exports = router;
