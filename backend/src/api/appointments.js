@@ -10,7 +10,7 @@ router.get("/getAppointment", async (req, res, next) => {
     return;
   }
     
-  const appointments = await Appointment.find({ [type]: userId })
+  const appointments = await Appointment.find({ [type]: userId ,status:'scheduled'})
     .populate({
       path: "barber",
       select: ["fname", "lname"],
@@ -65,10 +65,64 @@ if(barber.length===0 || Object.keys(service).length === 0 || endTime.length===0 
 
 router.put("/deleteAppointment",async(req,res,next)=>{
   const id=req.query.id;
- await Appointment.updateOne({_id:id},
+ const updateresult=await Appointment.updateOne({_id:id},
   [
   { $set: { status:"cancelled"} }
   ]);
+
+  console.log(updateresult)
+  if(updateresult.modifiedCount===1 && updateresult.matchedCount===1)
+  {
+    res.status(200).json({message:"Successfully Updated"})
+  }else if(updateresult.matchedCount ==0)
+  {
+    res.status(400).json({message:"No Data Found"})
+  }
+})
+
+router.put("/deleteAppointmentByDateAndBarber",async(req,res,next)=>{
+  const {date,barber} = req.query;
+ const updateresult=await Appointment.updateMany({date,barber,status:"scheduled"},
+  [
+  { $set: { status:"cancelled"} }
+  ]);
+
+  console.log(updateresult)
+  if(updateresult.modifiedCount>0 && updateresult.matchedCount>0)
+  {
+    res.status(200).json({message:"Successfully Updated All Records",updateresult})
+  }else if(updateresult.matchedCount ==0)
+  {
+    res.status(400).json({message:"No Data Found"})
+  }
+})
+
+router.get("/getAppointmentsByDateAndBarber",async(req,res,next)=>{
+  const { barber, date } = req.query; 
+  console.log(barber)
+  console.log(date)
+
+  if( barber=='' || date=='')
+  {
+
+    res.status(400).json({message:"Invalid Request"})
+  }else
+  {
+    const appointments = await Appointment.find({ barber,date:date,status:"scheduled"})
+    .populate({
+      path: "customer",
+      select: ["fname", "lname"],
+    });
+    if(appointments.length>0)
+    {
+      res.status(200).json({appointments})
+
+    }else
+    {
+
+      res.status(400).json({message:"No Appointments Found",appointments:[]})
+    }
+  }
 })
 
 module.exports = router;

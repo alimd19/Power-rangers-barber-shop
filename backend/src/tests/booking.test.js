@@ -70,3 +70,86 @@ describe("booking", () => {
     expect(res.body.message).toBe("You entered a wrong input type !");
   });
 });
+
+
+
+
+{ /** Nirmal  Get Barbers For Booking*/}
+describe("Get Barbers list from the Database for the booking", ()=>{
+
+  it("getting all the barber based on the type barber from user collection",async ()=>{
+
+      const res = await request
+          .get("/api/user/getUserByType/bb");
+
+          expect(res.statusCode).toBe(200);
+          expect(res.body.user).toBeDefined();
+  })
+})
+
+
+{ /** Nirmal  Get Services For Booking*/}
+describe("Get All the services list from the Database for the booking", ()=>{
+
+  it("getting all the barber based on the type barber from user collection",async ()=>{
+
+      const res = await request
+          .get("/api/service/getService");
+
+          expect(res.statusCode).toBe(200);
+          expect(res.body.services).toBeDefined();
+  })
+})
+
+{ /** Nirmal  Get Barbers Appointment by Date and Barber*/}
+describe("Get appointments by date and barber", ()=>{
+
+
+  const date = ''
+  it("Get appointments by date and barber",async ()=>{
+
+      const res = await request
+          .get("/api/appointment/getAppointmentsByDateAndBarber?date=2022-07-08T04:00:00.000Z&barber=62b12d6850cf566af0b16531");
+          expect(res.statusCode).toBe(200);
+          expect(res.body.appointments).toBeDefined();
+  })
+  it("No Appointment Found by the given date & barber",async ()=>{
+
+    const res = await request
+        .get("/api/appointment/getAppointmentsByDateAndBarber?date=2022-08-07T04:00:00.000Z&barber=62b12d6850cf566af0b16530");
+        expect(res.statusCode).toBe(400);
+        expect(res.body.message).toBe("No Appointments Found");
+})
+
+
+
+
+})
+
+
+{ /** Nirmal Cancel an appointment based on booking Id*/}
+describe("Cancel an Appointment", ()=>{
+  it("Cancel Appointment By Id",async ()=>{
+
+    const res = await request
+        .put("/api/appointment/deleteAppointment?id=62f1bd4226b0b387f28fa897",{
+          method: "PUT"
+        });
+        expect(res.statusCode).toBe(200);
+        expect(res.body.message).toBe("Successfully Updated");
+})
+
+it("Cancel Appointment id not found",async ()=>{
+
+  const res = await request
+      .put("/api/appointment/deleteAppointment?id=62b1336350cf566af0b16658",{
+        method:"PUT"
+      });
+      expect(res.statusCode).toBe(400);
+      expect(res.body.message).toBe("No Data Found");
+})
+
+
+
+})
+
