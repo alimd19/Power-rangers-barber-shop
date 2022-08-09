@@ -14,8 +14,15 @@ router.get("/getUser/:id", async (req, res, next) => {
 
 router.get("/getUserByType/:usertype", async (req, res, next) => {
   const usertype = req.params.usertype;
-  const user = await User.find({ userType: usertype }).exec();
-  res.send({ user });
+  if(usertype!='')
+  {
+    const user = await User.find({ userType: usertype }).exec();
+    res.status(200).json({ user });
+  }else
+  {
+    res.status(400).json({message: "Invalid Request"})
+  }
+  
 });
 
 router.get("/getUserByEmail/:email", async (req, res, next) => {
