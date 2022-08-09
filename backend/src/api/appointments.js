@@ -22,15 +22,45 @@ router.get("/getAppointment", async (req, res, next) => {
 
   res.json({ appointments });
 });
+function isNumeric(num){
+  return !isNaN(num)
+}
 
 router.post("/createAppointment", async (req, res, next) => {
-  console.log(req.body);
+ 
   const appointments = await Appointment.create(req.body);
-  if (req.body.date > new Date()) {
+   let userTime =new Date(req.body.date);
+   let serverTime =new Date()
+   serverTime.setDate(serverTime.getDate()-1)
+   let startTime = req.body.timeSlot.startTime;
+   let endTime = req.body.timeSlot.endTime;
+   let barber=req.body.barber;
+   let service=req.body.services;
+console.log(barber.length);
+console.log(isNumeric(endTime)+"kjo");
+console.log(isNumeric(startTime)+"Ajo")
+
+if(barber.length===0 && Object.keys(service).length === 0 && endTime.length===0 && startTime===0){
+  res.status(400).json({ message: "Don't leave empty fields" });
+}else{
+  if (userTime < serverTime ) {
     res.status(400).json({ message: "Please select a valid date" });
-  } else {
-    res.send({ appointments });
-  }
+   
+  }   
+  else {
+    if (isNumeric(endTime) && isNumeric(startTime)){
+      let parsEndTime=parseInt(endTime, 10)
+      let parsStartTime=parseInt(startTime, 10)
+      if(parsEndTime>parsStartTime){
+        res.send({ appointments });
+      }else{
+        res.status(400).json({ message: "Please the Start Time should be smaller then the End Time" });
+      }
+    }else{
+      res.status(400).json({ message: "You entered a wrong input type !" });
+    }
+  }  
+}
 });
 
 router.put("/deleteAppointment",async(req,res,next)=>{

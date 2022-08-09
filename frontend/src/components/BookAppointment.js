@@ -97,14 +97,25 @@ const BookAppointment = () => {
     setAppointment(appointment => ({ ...appointment,timeSlot:timeSlot ,'status': "scheduled"}))
   }
   const submitHandler = (evt) => {
+    if(appointment.timeSlot.startTime.length===0||appointment.timeSlot.endTime.length===0 ||
+      Object.keys(appointment.services).length === 0 || appointment.barber.length===0  ){
+        setMessage("Don't leave empty informations");
+    }else{
+      if(!isNaN(appointment.timeSlot.startTime) || !isNaN(appointment.timeSlot.endTime) ){
+        console.log()
+        if(parseInt(appointment.timeSlot.startTime, 10)==0 || parseInt(appointment.timeSlot.endTime, 10)==0){
+          setMessage("Starting time or End Time should not be 0");
+        }else{
     evt.preventDefault();
     console.log(appointment)
     fetch("http://localhost:3030/api/appointment/createAppointment",{
       method:"POST",
       headers: { "Content-Type": "application/json" },
+      
       body: JSON.stringify(appointment),
     })
       .then((res) => {
+        console.log(appointment);
         if(res.ok)
         {
           setMessage("Your booking is confirmed!!!")
@@ -117,7 +128,11 @@ const BookAppointment = () => {
       .catch((err) => {
         console.log(`Error ${err}`);
       });
-
+    }
+    }else{
+      setMessage("Please the Start and End Time should be a number")
+    }
+    }
   }
   return (
     <div className="bookappointment">
