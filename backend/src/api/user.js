@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const { request } = require("express");
 const { User } = require("../db/models");
 
 router.get("/getUser/:id", async (req, res, next) => {
@@ -26,11 +27,36 @@ router.get("/getUserByEmail/:email", async (req, res, next) => {
 // delete user by ID for testing
 router.delete("/deleteUser/:id", async (req, res, next) => {
   const id = req.params.id;
+  console.log(id);
   try {
     await User.deleteOne({ _id: id });
     res
       .status(200)
       .json({ message: `User with id: ${id} deleted successfully!` });
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+    return;
+  }
+});
+// update a user
+router.put("/updateUser/:id", async (req, res, next) => {
+  const id = req.params.id;
+  console.log(id);
+
+  try {
+    await User.updateOne({ _id: id }, [
+      {
+        $set: {
+          fname: req.body.fname,
+          lname: req.body.lname,
+          email: req.body.email,
+        },
+      },
+    ]);
+
+    res
+      .status(200)
+      .json({ message: `User with id: ${id} updated successfully!` });
   } catch (err) {
     res.status(400).json({ message: err.message });
     return;
