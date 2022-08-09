@@ -62,9 +62,9 @@ const BookAppointment = () => {
           return res.json();
         })
         .then((json) => {
-          const schedules = json.schedules[0];
+          //const schedules = json.schedules[0];
           if (appointmentDate) {
-            const day = appointmentDate.getDay();
+            //const day = appointmentDate.getDay();
           }
         })
         .catch((err) => {
@@ -103,7 +103,7 @@ const BookAppointment = () => {
     }else{
       if(!isNaN(appointment.timeSlot.startTime) || !isNaN(appointment.timeSlot.endTime) ){
         console.log()
-        if(parseInt(appointment.timeSlot.startTime, 10)==0 || parseInt(appointment.timeSlot.endTime, 10)==0){
+        if(parseInt(appointment.timeSlot.startTime, 10)===0 || parseInt(appointment.timeSlot.endTime, 10)===0){
           setMessage("Starting time or End Time should not be 0");
         }else{
     evt.preventDefault();
@@ -115,6 +115,7 @@ const BookAppointment = () => {
       body: JSON.stringify(appointment),
     })
       .then((res) => {
+        
         console.log(appointment);
         if(res.ok)
         {
@@ -122,7 +123,7 @@ const BookAppointment = () => {
           navigate("/appointment")
         }else
         {
-          setMessage("Booking Not Confirmed")
+          setMessage(`Booking Not Confirmed caused by ${res.statusText}`)
         }
       })
       .catch((err) => {

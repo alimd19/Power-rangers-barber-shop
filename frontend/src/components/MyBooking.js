@@ -15,7 +15,9 @@ const MyBooking = () => {
           return res.json();
         })
         .then((json) => {
-          setBookings(json.appointments);
+          
+        
+          setBookings(json.appointments.filter(app =>app.status==='scheduled'));
         })
         .catch((err) => {
           console.log(err.message);

@@ -1,3 +1,9 @@
+
+/*********************************
+ * This tests have been made by Klaus Cepani(157246208)
+ * 
+ */
+
 const app = require("../app");
 const db = require("../db");
 const supertest = require("supertest");
@@ -49,17 +55,8 @@ describe("booking", () => {
     expect(res.body.message).toBe("Please the Start Time should be smaller then the End Time");
   });
   
-  it("Start time smaller then end time", async () => {
-    const res = await request
-      .post("/api/appointment/createAppointment")
-      .send({ date: "9/8/2022", services: ['62b132ce50cf566af0b16549'],customer:'62b12d6850cf566af0b16530' ,barber:'62b12d6850cf566af0b16532',timeSlot:{startTime:'2',endTime:'1'},status:'scheduled'});
-
-    
-
-    expect(res.statusCode).toBe(400);
-    expect(res.body.message).toBe("Please the Start Time should be smaller then the End Time");
-  });
-  it("Start time smaller then end time", async () => {
+  
+  it("Entering a wrong type string ", async () => {
     const res = await request
       .post("/api/appointment/createAppointment")
       .send({ date: "9/8/2022", services: ['62b132ce50cf566af0b16549'],customer:'62b12d6850cf566af0b16530' ,barber:'62b12d6850cf566af0b16532',timeSlot:{startTime:'s',endTime:'s'},status:'scheduled'});
