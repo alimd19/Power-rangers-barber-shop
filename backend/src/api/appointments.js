@@ -30,6 +30,8 @@ function isNumeric(num) {
 router.post("/createAppointment", async (req, res, next) => {
   let userTime = new Date(req.body.date);
   let serverTime = new Date();
+  console.log(userTime);
+  console.log(serverTime-1);
   serverTime.setDate(serverTime.getDate() - 1);
   let startTime = req.body.timeSlot.startTime;
   let endTime = req.body.timeSlot.endTime;

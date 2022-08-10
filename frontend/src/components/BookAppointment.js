@@ -123,7 +123,7 @@ const BookAppointment = () => {
           navigate("/appointment")
         }else
         {
-          setMessage(`Booking Not Confirmed caused by ${res.statusText}`)
+          setMessage(`Booking Not Confirmed caused by ${res.text}`)
         }
       })
       .catch((err) => {
@@ -146,7 +146,7 @@ const BookAppointment = () => {
                 value={appointmentDate}
                 InputProps={{ style: { width: 400 } }}
                 onChange={(newValue) => {
-                  const appointmentdate = newValue.getDate() + "/" + (newValue.getMonth() + 1) + "/" + newValue.getFullYear();
+                  const appointmentdate = (newValue.getMonth() + 1) + "/" + newValue.getDate() + "/" + newValue.getFullYear();
                   setAppointment((appointment) => ({ ...appointment, "date": appointmentdate }));
                   setAppointmentDate(newValue);
                 }}
