@@ -4,6 +4,7 @@ const { Appointment } = require("../db/models");
 // find appointments by user id (barber or customer)
 router.get("/getAppointment", async (req, res, next) => {
   const { type, userId } = req.query;
+  
 
   if (!userId || !type || userId == "undefined") {
     res.status(400).json({ message: "Please provide a user id and type" });
@@ -73,9 +74,10 @@ router.put("/deleteAppointment",async(req,res,next)=>{
  const updateresult=await Appointment.updateOne({_id:id},
   [
   { $set: { status:"cancelled"} }
+
   ]);
 
-  console.log(updateresult)
+  console.log("Cancel Single Appointment Result modified"+updateresult)
   if(updateresult.modifiedCount===1 && updateresult.matchedCount===1)
   {
     res.status(200).json({message:"Successfully Updated"})

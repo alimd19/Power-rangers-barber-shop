@@ -125,7 +125,7 @@ describe("Get appointments by date and barber", ()=>{
 
 
 { /** Nirmal Cancel an appointment based on booking Id*/}
-describe("Cancel an Appointment", ()=>{
+describe("Cancel a Single Appointment", ()=>{
   it("Cancel Appointment By Id",async ()=>{
 
     const res = await request
@@ -136,6 +136,7 @@ describe("Cancel an Appointment", ()=>{
         expect(res.body.message).toBe("Successfully Updated");
 })
 
+
 it("Cancel Appointment id not found",async ()=>{
 
   const res = await request
@@ -145,8 +146,20 @@ it("Cancel Appointment id not found",async ()=>{
       expect(res.statusCode).toBe(400);
       expect(res.body.message).toBe("No Data Found");
 })
+})
 
 
+{ /** Nirmal Cancel all Appointment by date and barber Name  booking Id*/}
+describe("Cancel All Appointment for a day by particular barber", ()=>{
+  it("Cancel Appointment By Date and Barber Id",async ()=>{
+
+    const res = await request
+        .put("/api/appointment/getAppointmentsByDateAndBarber?date=2022-07-08T04:00:00.000Z&barber=62b12d6850cf566af0b16531",{
+          method: "PUT"
+        });
+        expect(res.statusCode).toBe(200);
+        expect(res.body.message).toBe("Successfully Updated");
+})
 
 })
 

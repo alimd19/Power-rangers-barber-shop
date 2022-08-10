@@ -67,6 +67,7 @@ const ViewCancelAppointment = () => {
         return res.json();
       })
       .then((json) => {
+        console.log(json.appointments)
         setAppointment(json.appointments);
       })
       .catch((err) => {
