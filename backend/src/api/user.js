@@ -1,5 +1,4 @@
 const router = require("express").Router();
-const { request } = require("express");
 const { User } = require("../db/models");
 
 router.get("/getUser/:id", async (req, res, next) => {
@@ -14,15 +13,12 @@ router.get("/getUser/:id", async (req, res, next) => {
 
 router.get("/getUserByType/:usertype", async (req, res, next) => {
   const usertype = req.params.usertype;
-  if(usertype!='')
-  {
+  if (usertype != "") {
     const user = await User.find({ userType: usertype }).exec();
     res.status(200).json({ user });
-  }else
-  {
-    res.status(400).json({message: "Invalid Request"})
+  } else {
+    res.status(400).json({ message: "Invalid Request" });
   }
-  
 });
 
 router.get("/getUserByEmail/:email", async (req, res, next) => {
@@ -34,7 +30,6 @@ router.get("/getUserByEmail/:email", async (req, res, next) => {
 // delete user by ID for testing
 router.delete("/deleteUser/:id", async (req, res, next) => {
   const id = req.params.id;
-  console.log(id);
 
   try {
     await User.deleteOne({ _id: id });
@@ -46,13 +41,13 @@ router.delete("/deleteUser/:id", async (req, res, next) => {
     return;
   }
 });
+
 // update a user
 router.put("/updateUser/:id", async (req, res, next) => {
   const id = req.params.id;
   console.log(id);
 
   try {
-    console.log("Erdhi")
     await User.updateOne({ _id: id }, [
       {
         $set: {

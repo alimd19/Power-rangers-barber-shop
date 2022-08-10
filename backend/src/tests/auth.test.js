@@ -51,13 +51,13 @@ describe("login", () => {
     expect(res.body.token).toBeDefined();
   });
 
-  it("test barber login", async () => {
+  it("test customer login", async () => {
     const res = await request
       .post("/api/auth/login")
       .send({ email: "a.stewart@powerrangers.com", password: "Hello__World" });
 
     expect(res.statusCode).toBe(200);
-    expect(res.body.id).toBe("62b12d6850cf566af0b16533");
+    expect(res.body.id).toBe("62f31441e3b7f069ae0cb9c0");
     expect(res.body.email).toBe("a.stewart@powerrangers.com");
     expect(res.body.userType).toBe("cs");
     expect(res.body.token).toBeDefined();

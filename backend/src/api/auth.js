@@ -59,10 +59,10 @@ router.post("/signup", async (req, res, next) => {
     return;
   }
 
-  if (!validator.isStrongPassword(password)) {
-    res.status(400).json({ message: "Please use a strong password" });
-    return;
-  }
+  // if (!validator.isStrongPassword(password)) {
+  //   res.status(400).json({ message: "Please use a strong password" });
+  //   return;
+  // }
 
   const exists = await User.findOne({ email });
 
