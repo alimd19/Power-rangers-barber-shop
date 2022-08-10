@@ -1,3 +1,7 @@
+/*********************************
+ * This tests have been made by Jorid Spaha
+ *
+ */
 const app = require("../app");
 const db = require("../db");
 const supertest = require("supertest");
