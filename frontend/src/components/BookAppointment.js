@@ -16,7 +16,7 @@ const BookAppointment = () => {
   const [barbers, setBarbers] = useState([]);
   const [message,setMessage]= useState("");
   useEffect(() => {
-    const todaysDate = appointmentDate.getDate() + "/" + (appointmentDate.getMonth() + 1) + "/" + appointmentDate.getFullYear();
+    const todaysDate = getDatedbVersion(new Date());
     setAppointment(appointment => ({ ...appointment, 'date': todaysDate }));
     fetch(`http://localhost:3030/api/user/getUserByEmail/${user.email}`)
       .then((res) => {
@@ -50,6 +50,25 @@ const BookAppointment = () => {
         console.log(`Error ${err}`);
       });
   }, []);
+
+     // Date to convert from dbversion to date javascript
+
+  const getDateJavaScript=(dbVersionDate)=>{
+
+    var  dateVersion = new Date(dbVersionDate);
+    return dateVersion;
+    }
+  
+    //Date to convert from javascript to date dbversion
+  
+    const getDatedbVersion=(dateJavaScriptVersion)=>{
+  
+      var date = dateJavaScriptVersion.getDate();
+      var month = dateJavaScriptVersion.getMonth() + 1; // Since getMonth() returns month from 0-11 not 1-12
+      var year = dateJavaScriptVersion.getFullYear();
+      
+      return year+"-"+month+"-"+date+"00:00:00.000Z"
+    }
 
   const handleChange = (event) => {
     setAppointment(appointment => ({ ...appointment, 'customer': loggedInUser._id }))
@@ -146,8 +165,8 @@ const BookAppointment = () => {
                 value={appointmentDate}
                 InputProps={{ style: { width: 400 } }}
                 onChange={(newValue) => {
-                  const appointmentdate = (newValue.getMonth() + 1) + "/" + newValue.getDate() + "/" + newValue.getFullYear();
-                  setAppointment((appointment) => ({ ...appointment, "date": appointmentdate }));
+                  console.log(newValue);
+                  setAppointment((appointment) => ({ ...appointment, "date": newValue}));
                   setAppointmentDate(newValue);
                 }}
                 renderInput={(params) => <TextField {...params} />}

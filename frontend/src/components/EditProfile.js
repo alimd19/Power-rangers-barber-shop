@@ -1,57 +1,56 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect} from "react";
 import Button from "react-bootstrap/Button";
 import { UserContext } from "../contexts/UserContext";
 
 const EditProfile = () => {
   const { user } = useContext(UserContext);
-  const [updatedUser, setUpdatedUsers] = useState({});
   const [loggedInUser, setLoggedInUser] = useState({});
+  const [updatedUser, setUpdatedUsers] = useState({fname:'',lname:'',email:''});
+  const [msg,setMsg] = useState('');
   const handleChange = (event) => {
-    const name = event.target.name;
-
+    const name = event.target.name
     const value = event.target.value;
-
     setUpdatedUsers((users) => ({ ...users, [name]: value }));
   };
-  const submitHandler = (evt) => {
-    evt.preventDefault();
-    console.log(updatedUser);
+
+  useEffect(() => {
     fetch(`http://localhost:3030/api/user/getUserByEmail/${user.email}`)
       .then((res) => {
         return res.json();
       })
-      .then((json) => {
-        console.log(json);
-        setLoggedInUser(json.users[0]);
-        console.log(json.users[0]);
-        fetch(
-          `http://localhost:3030/api/user/updateUser/${json.users[0]._id}`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
+      .then((json)=>{
+        setUpdatedUsers(json.users[0]);
+      })
+      .catch(err=>{
+        console.log(`Error ${err}`);
+      })
+  },[])
 
-            body: JSON.stringify(user),
-          }
-        )
+  //#region UpdateUser
+  const updateUser = (evt) => {
+    evt.preventDefault();
+    fetch(`http://localhost:3030/api/user/updateUser/${updatedUser._id}`,
+          { method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(updatedUser),
+          })
           .then((res) => {
             if (res.ok) {
-              console.log("User updated");
-            } else {
-              console.log("user not updated");
+              return res.json();
             }
+          })
+          .then((json)=>{
+            setMsg(json.message);
           })
           .catch((err) => {
             console.log(`Error ${err}`);
           });
-      })
-      .catch((err) => {
-        console.log(`Error ${err}`);
-      });
-    console.log(loggedInUser);
-  };
+  }
+  //#endregion
+
   return (
     <div>
-      <form noValidate onSubmit={submitHandler}>
+      <form noValidate onSubmit={updateUser}>
         <div className="form">
           <div className="form-body">
             <div className="username">
@@ -63,6 +62,7 @@ const EditProfile = () => {
                 className="form__input"
                 type="text"
                 name="fname"
+                value={updatedUser.fname}
                 id="fname"
                 placeholder="First Name"
               />
@@ -76,6 +76,7 @@ const EditProfile = () => {
                 type="text"
                 name="lname"
                 id="lname"
+                value={updatedUser.lname}
                 className="form__input"
                 placeholder="LastName"
               />
@@ -100,6 +101,7 @@ const EditProfile = () => {
                 onChange={handleChange}
                 type="email"
                 name="email"
+                value={updatedUser.email}
                 id="email"
                 className="form__input"
                 placeholder="Email"
@@ -132,6 +134,9 @@ const EditProfile = () => {
             <Button type="submit" class="btn" variant="outline-primary">
               Update Details
             </Button>
+          </div>
+          <div>
+            {msg}
           </div>
         </div>
       </form>

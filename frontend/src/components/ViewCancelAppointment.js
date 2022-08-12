@@ -17,10 +17,12 @@ const ViewCancelAppointment = () => {
   const [barberName, setBarberName] = useState('');
   const [showTable, setShowTable] = useState(false);
   const [appointment, setAppointment] = useState([]);
+  const [msg, setMsg] = useState('');
 
   const { user } = useContext(UserContext);
-  useEffect(() => {
 
+  //#region BarberNamesPopulate
+  useEffect(() => {
     fetch("http://localhost:3030/api/user/getUserByType/bb")
       .then((res) => {
         return res.json();
@@ -33,79 +35,101 @@ const ViewCancelAppointment = () => {
         console.log(`Error ${err}`);
       });
   }, [])
+  //#endregion
 
-
-  const cancelAllAppointment = () => {
-    let appdate = appointmentDate.toISOString();
-    fetch(`/api/appointment/deleteAppointmentByDateAndBarber?date=${appdate}&barber=${barberName}`, { method: "PUT" })
+  //#region CancelAllAppointment
+  //Cancel all the Appointment for a particular day based on Date and Barber
+  const onCancelAllAppointment = () => {
+    fetch(`/api/appointment/deleteAppointmentByDateAndBarber?date=${appointmentDate}&barber=${barberName}`, { method: "PUT" })
       .then((res) => {
-          if(res.status===200)
-          {
-              if(res.json().updateresult.modifiedCount===appointment.length)
-              {
-                setAppointment([]);
-              }
-          }           
+        if (res.status === 200) {
+          if (res.json().updateresult.modifiedCount === appointment.length) {
+            setAppointment([]);
+          }
+        }
       })
-      
       .catch((err) => {
         console.log(err.message);
       });
-      setShowTable(true)
+    setShowTable(true)
   }
+  //#endregion
 
-
-  const handleChange = (event) => {
-    console.log(event.target.value)
-    setBarberName(event.target.value);
-  }
-  const submitHandler = (evt) => {
+  //#region FetchAllAppointments
+  //All Appointments for particular date and Barber Name
+  const getAppointments = (evt) => {
     evt.preventDefault();
-    let appdate = appointmentDate.toISOString();
-    fetch(`/api/appointment/getAppointmentsByDateAndBarber?date=${appdate}&barber=${barberName}`)
-      .then((res) => {
-        return res.json();
-      })
-      .then((json) => {
-        console.log(json.appointments)
-        setAppointment(json.appointments);
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
-      setShowTable(true);
+    if (appointmentDate != null && barberName != '') {
+      setMsg('');
+      fetch(`/api/appointment/getAppointmentsByDateAndBarber?date=${appointmentDate}&barber=${barberName}`)
+        .then((res) => {
+          return res.json();
+        })
+        .then((json) => {
+          if (json.message) {
+            setShowTable(false);
+            setMsg(json.message)
+          } else {
+            setShowTable(true);
+            setAppointment(json.appointments);
+          }
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
+    } else {
+      if (appointmentDate == null) {
+        setMsg('Appointment Date is missing');
+      } else {
+        setMsg('Barbers Name is not Selected')
+      }
+    }
+
   }
-  const clickCancelHandler = (event, bookingId) => {
+  //#endregion
+
+  //#region CancelSingleAppointment
+  //Cancel Single Appointment and Update all appointment array
+  const onCancelSingleAppointment = (event, bookingId) => {
     fetch(`api/appointment/deleteAppointment?id=${bookingId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: null
     })
-    let appdate = appointmentDate.toISOString();
-    fetch(`/api/appointment/getAppointmentsByDateAndBarber?date=${appdate}&barber=${barberName}`)
+    fetch(`/api/appointment/getAppointmentsByDateAndBarber?date=${appointmentDate}&barber=${barberName}`)
       .then((res) => {
         return res.json();
       })
       .then((json) => {
-        setAppointment(json.appointments);
+        if (json.message) {
+          setShowTable(false)
+          setMsg(json.message)
+        } else {
+          setAppointment(json.appointments);
+        }
       })
       .catch((err) => {
         console.log(err.message);
       });
   }
-  return (
+  //#endregion
 
+  return (
     <div>
       <div className='viewcancelapp'>
-        <form noValidate onSubmit={submitHandler}>
+        <form noValidate onSubmit={getAppointments}>
           <div>
             <div className='viewfield'>
               <DatePicker
                 label="Appointment Date"
                 value={appointmentDate}
                 onChange={(newValue) => {
-                  console.log(newValue)
-                  setAppointmentDate(newValue);
+                  var date = new Date();
+                  var d = new Date(newValue.getFullYear() + "-" + (newValue.getMonth() + 1) + "-" + (newValue.getDate() + " " + new Date().getHours() + ":" + new Date().getMinutes()));
+                  d.setHours(d.getHours() + 4);
+                  console.log(d)
+                  d.setHours(0, 0, 0, 0);
+                  setAppointmentDate(d);
                 }}
                 renderInput={(params) => <TextField {...params} />}
               />
@@ -114,7 +138,7 @@ const ViewCancelAppointment = () => {
               <TextField
                 select
                 label="Barber's Name"
-                onChange={handleChange}
+                onChange={(event) => { setBarberName(event.target.value) }}
                 helperText="Please select Barber's Name"
               >
                 {barberNames.map((option) => (
@@ -134,6 +158,7 @@ const ViewCancelAppointment = () => {
         </form>
       </div>
       <div className='tablecontent'>
+        <div className='msg'>{msg}</div>
         {showTable && <div>
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 600, color: '#f5deb3' }} aria-label="simple table">
@@ -146,7 +171,7 @@ const ViewCancelAppointment = () => {
                   <TableCell align="center">Time</TableCell>
                   <TableCell align="center">
                     <Button variant="contained"
-                      type='button' color='secondary' onClick={cancelAllAppointment}>Cancel All</Button>
+                      type='button' color='secondary' onClick={onCancelAllAppointment}>Cancel All</Button>
                   </TableCell>
                 </TableRow>
               </TableHead>
@@ -164,7 +189,7 @@ const ViewCancelAppointment = () => {
                     <TableCell align="center">{row.date}</TableCell>
                     <TableCell align="center">{row.time}</TableCell>
                     <TableCell align="center">
-                      <Button onClick={(event) => clickCancelHandler(event, row._id)} startIcon={<CancelIcon />}></Button>
+                      <Button onClick={(event) => onCancelSingleAppointment(event, row._id)} startIcon={<CancelIcon />}></Button>
                     </TableCell>
 
                   </TableRow>
