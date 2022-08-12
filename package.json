@@ -9,7 +9,8 @@
     "backend": "cd backend && nodemon src/index.js",
     "dev": "concurrently --kill-others-on-fail \"npm run backend\" \"npm run frontend\"",
     "heroku-postbuild": "npm run setup && cd frontend && npm run build",
-    "prod": "cd frontend && npm run build && cd ../backend && npm run dev"
+    "prod": "cd frontend && npm run build && cd ../backend && npm run dev",
+    "test": "cd backend && npm run test"
   },
   "repository": {
     "type": "git",

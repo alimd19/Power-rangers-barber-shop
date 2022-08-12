@@ -13,6 +13,7 @@ import EditProfile from "./components/EditProfile";
 import ViewCancelAppointment from "./components/ViewCancelAppointment";
 import BookAppointment from "./components/BookAppointment";
 import MyBooking from "./components/MyBooking";
+import ScheduleForm from "./components/ScheduleForm";
 
 const color = "#000";
 const theme = createTheme({
@@ -86,7 +87,8 @@ function App() {
                   path="/appointmenthistory"
                   element={<ViewCancelAppointment />}
                 ></Route>
-                <Route path="/appointment" element={<MyBooking />}></Route>
+                <Route path="/appointment" element={<MyBooking />} />
+                <Route path="/scheduleForm" element={<ScheduleForm />} />
               </Routes>
             </Layout>
           </UserProvider>

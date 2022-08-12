@@ -86,6 +86,7 @@ export default function NavBar({ children }) {
                 { link: "Appointment History", path: "/appointmenthistory" },
                 { link: "Book Appointment", path: "/booking" },
                 { link: "Profile Setup", path: "/profile" },
+                { link: "Schedule Form", path: "/scheduleForm" },
               ].map((text, index) => (
                 <ListItem className="list" key={index}>
                   <CustomLink to={text.path}>{text.link}</CustomLink>

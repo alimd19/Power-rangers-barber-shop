@@ -28,7 +28,6 @@ const ViewCancelAppointment = () => {
         return res.json();
       })
       .then((json) => {
-        console.log(json.user)
         setBarberNames(json.user)
       })
       .catch((err) => {

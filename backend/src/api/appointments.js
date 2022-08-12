@@ -72,13 +72,18 @@ router.post("/createAppointment", async (req, res, next) => {
 
 router.put("/deleteAppointment", async (req, res, next) => {
   const id = req.query.id;
-  const updateresult = await Appointment.updateOne({ _id: id }, [{ $set: { status: "cancelled" } }]);
-  if (updateresult.modifiedCount === 1 && updateresult.matchedCount === 1) {
-    res.status(200).json({ message: "Successfully Updated" })
-  } else if (updateresult.matchedCount == 0) {
-    res.status(400).json({ message: "No Data Found" })
+  try {
+    await Appointment.updateOne({ _id: id }, [
+      { $set: { status: "cancelled" } },
+    ]);
+    res.status(200).json({ message: "Appointment cancelled successfuly !" });
+  } catch (err) {
+    res
+      .status(400)
+      .json({ message: "Your appointment could not be cancelled!" });
+    return;
   }
-})
+});
 
 router.put("/deleteAppointmentByDateAndBarber", async (req, res, next) => {
   const { date, barber } = req.query;
@@ -107,6 +112,6 @@ router.get("/getAppointmentsByDateAndBarber", async (req, res, next) => {
   } catch (err) {
     res.status(400).json({ message: err.message, appointments: [] })
   }
-})
+});
 
 module.exports = router;
