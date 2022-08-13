@@ -60,7 +60,6 @@ router.delete("/deleteUser/:id", async (req, res, next) => {
 // update a user
 router.put("/updateUser/:id", async (req, res, next) => {
   const id = req.params.id;
-  console.log(id);
 
   try {
     await User.updateOne({ _id: id }, [
@@ -75,7 +74,7 @@ router.put("/updateUser/:id", async (req, res, next) => {
 
     res
       .status(200)
-      .json({ message: `User with id: ${id} updated successfully!` });
+      .json({ message: `User updated successfully!` });
   } catch (err) {
     res.status(400).json({ message: err.message });
     return;

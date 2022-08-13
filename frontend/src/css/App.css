@@ -205,8 +205,12 @@ body{
     transform: scale(1.1);
     
    
-   
   
   }
-  
+  .msg{
+    color:red;
+    margin:2% ;
+    justify-content: center;
+    display: flex;
+   }
   

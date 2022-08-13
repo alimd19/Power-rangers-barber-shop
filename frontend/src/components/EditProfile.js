@@ -10,12 +10,10 @@ const EditProfile = () => {
     const name = event.target.name;
 
     const value = event.target.value;
-
     setUpdatedUsers((users) => ({ ...users, [name]: value }));
   };
   const submitHandler = (evt) => {
     evt.preventDefault();
-    console.log(updatedUser);
     fetch(`/api/user/getUserByEmail/${user.email}`)
       .then((res) => {
         return res.json();
@@ -25,7 +23,7 @@ const EditProfile = () => {
         setLoggedInUser(json.users[0]);
         console.log(json.users[0]);
         fetch(
-          `http://localhost:3030/api/user/updateUser/${json.users[0]._id}`,
+          `/api/user/updateUser/${json.users[0]._id}`,
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -47,7 +45,6 @@ const EditProfile = () => {
       .catch((err) => {
         console.log(`Error ${err}`);
       });
-    console.log(loggedInUser);
   };
   return (
     <div>
@@ -63,6 +60,7 @@ const EditProfile = () => {
                 className="form__input"
                 type="text"
                 name="fname"
+                value={updatedUser.fname}
                 id="fname"
                 placeholder="First Name"
               />
@@ -76,22 +74,11 @@ const EditProfile = () => {
                 type="text"
                 name="lname"
                 id="lname"
+                value={updatedUser.lname}
                 className="form__input"
                 placeholder="LastName"
               />
             </div>
-            {/* <div className="phone#">
-              <label className="form__label" for="lastName">
-                Phone number:
-              </label>
-              <input
-                type="text"
-                name=""
-                id="phone#"
-                className="form__input"
-                placeholder="Phone #"
-              />
-            </div> */}
             <div className="email">
               <label className="form__label" for="email">
                 Email:
@@ -100,33 +87,12 @@ const EditProfile = () => {
                 onChange={handleChange}
                 type="email"
                 name="email"
+                value={updatedUser.email}
                 id="email"
                 className="form__input"
                 placeholder="Email"
               />
             </div>
-            {/* <div className="password">
-              <label className="form__label" for="password">
-                Password:
-              </label>
-              <input
-                className="form__input"
-                type="password"
-                id="password"
-                placeholder="Password"
-              />
-            </div>
-            <div className="confirm-password">
-              <label className="form__label" for="confirmPassword">
-                Confirm Password:
-              </label>
-              <input
-                className="form__input"
-                type="password"
-                id="confirmPassword"
-                placeholder="Confirm Password"
-              />
-            </div> */}
           </div>
           <div class="footer">
             <Button type="submit" class="btn" variant="outline-primary">
