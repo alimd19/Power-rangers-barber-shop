@@ -29,6 +29,7 @@ router.post("/createAppointment", async (req, res, next) => {
   const serverDate = new Date();
   //Changes by Nirmal 
   appointmentDate.setUTCHours(0,0,0,0);
+  req.body.date=appointmentDate
   // Changes end By Nirmal
   const { timeSlot, barber, services, customer } = req.body;
 
@@ -65,18 +66,25 @@ router.put("/deleteAppointment", async (req, res, next) => {
 });
 
 router.get("/getAppointmentsByDateAndBarber", async (req, res, next) => {
-  const { barber, date } = req.query;
+  const { barber,date } = req.query;
+  //Changes Nirmal
+  var d2 = new Date(date).setUTCHours(0, 0, 0, 0);  
+ 
   if (barber == "" || date == "") {
     res.status(400).json({ message: "Invalid Request" });
   } else {
     const appointments = await Appointment.find({
       barber,
-      date: date,
+      date: d2,
       status: "scheduled",
     }).populate({
       path: "customer",
       select: ["fname", "lname"],
+    }).populate({
+      path: "timeSlot",
+      select:["display"]
     });
+     //Changes Nirmal End
     if (appointments.length > 0) {
       res.status(200).json({ appointments });
     } else {

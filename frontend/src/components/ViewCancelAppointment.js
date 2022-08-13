@@ -190,7 +190,7 @@ const ViewCancelAppointment = () => {
                     <TableCell align="center">{row._id}</TableCell>
                     <TableCell align="center">{row.customer.fname}</TableCell>
                     <TableCell align="center">{row.date}</TableCell>
-                    <TableCell align="center">{row.time}</TableCell>
+                    <TableCell align="center">{row.timeSlot.display}</TableCell>
                     <TableCell align="center">
                       <Button onClick={(event) => onCancelSingleAppointment(event, row._id)} startIcon={<CancelIcon />}></Button>
                     </TableCell>
