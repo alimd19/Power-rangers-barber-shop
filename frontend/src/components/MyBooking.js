@@ -15,9 +15,9 @@ const MyBooking = () => {
           return res.json();
         })
         .then((json) => {
-          
-        
-          setBookings(json.appointments.filter(app =>app.status==='scheduled'));
+          setBookings(
+            json.appointments.filter((app) => app.status === "scheduled")
+          );
         })
         .catch((err) => {
           console.log(err.message);
@@ -36,16 +36,17 @@ const MyBooking = () => {
         Upcoming Booking Details
       </Typography>
       {bookings.map((booking) => {
-        
         return (
           <div className="bookingcard" key={booking._id}>
             <Typography variant="h5">
               Barber: {booking.barber.fname + " " + booking.barber.lname}
             </Typography>
             <Typography variant="h5">Booking Id: {booking._id}</Typography>
-            <Typography variant="h5">Date: {new Date(booking.date).toDateString()}</Typography>
             <Typography variant="h5">
-              Time: {booking.timeSlot.startTime} - {booking.timeSlot.endTime}
+              Date: {new Date(booking.date).toDateString()}
+            </Typography>
+            <Typography variant="h5">
+              Time: {booking.timeSlot.display}
             </Typography>
           </div>
         );

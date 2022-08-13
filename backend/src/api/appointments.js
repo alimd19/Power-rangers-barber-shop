@@ -18,7 +18,8 @@ router.get("/getAppointment", async (req, res, next) => {
     .populate({
       path: "services",
       select: ["name"],
-    });
+    })
+    .populate({ path: "timeSlot", select: ["display"] });
 
   res.json({ appointments }).status(200);
 });
