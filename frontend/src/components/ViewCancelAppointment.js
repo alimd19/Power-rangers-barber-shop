@@ -23,7 +23,7 @@ const ViewCancelAppointment = () => {
 
   //#region BarberNamesPopulate
   useEffect(() => {
-    fetch("http://localhost:3030/api/user/getUserByType/bb")
+    fetch("/api/user/getUserByType/bb")
       .then((res) => {
         return res.json();
       })

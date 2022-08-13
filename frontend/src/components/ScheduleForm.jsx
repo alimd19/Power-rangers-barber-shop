@@ -162,7 +162,7 @@ const ScheduleForm = () => {
 
     if (allGood) {
       if (schedule) {
-        fetch("http://localhost:3030/api/schedule/updateSchedule", {
+        fetch("/api/schedule/updateSchedule", {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
@@ -183,7 +183,7 @@ const ScheduleForm = () => {
           })
           .catch((err) => console.log(err));
       } else {
-        fetch("http://localhost:3030/api/schedule/createSchedule", {
+        fetch("/api/schedule/createSchedule", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -211,7 +211,7 @@ const ScheduleForm = () => {
 
   useEffect(() => {
     if (user.userType === "mg" || user.userType === "bb") {
-      fetch(`http://localhost:3030/api/schedule/getScheduleByBarber/${user.id}`)
+      fetch(`/api/schedule/getScheduleByBarber/${user.id}`)
         .then((res) => res.json())
         .then((json) => {
           if (json.message) {

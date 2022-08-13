@@ -18,7 +18,7 @@ const BookAppointment = () => {
   useEffect(() => {
     const todaysDate = getDatedbVersion(new Date());
     setAppointment(appointment => ({ ...appointment, 'date': todaysDate }));
-    fetch(`http://localhost:3030/api/user/getUserByEmail/${user.email}`)
+    fetch(`/api/user/getUserByEmail/${user.email}`)
       .then((res) => {
         return res.json();
       })
@@ -29,7 +29,7 @@ const BookAppointment = () => {
       .catch((err) => {
         console.log(`Error ${err}`);
       });
-    fetch("http://localhost:3030/api/user/getUserByType/bb")
+    fetch("/api/user/getUserByType/bb")
       .then((res) => {
         return res.json();
       })
@@ -39,7 +39,7 @@ const BookAppointment = () => {
       .catch((err) => {
         console.log(`Error ${err}`);
       });
-    fetch("http://localhost:3030/api/service/getService")
+    fetch("/api/service/getService")
       .then((res) => {
         return res.json();
       })
@@ -76,7 +76,7 @@ const BookAppointment = () => {
     const name = event.target.name;
     const value = event.target.value;
     if (event.target.name === 'barber') {
-      fetch(`http://localhost:3030/api/schedule/getScheduleBybarber/${event.target.value}`)
+      fetch(`/api/schedule/getScheduleBybarber/${event.target.value}`)
         .then((res) => {
           return res.json();
         })
@@ -127,7 +127,7 @@ const BookAppointment = () => {
         }else{
     evt.preventDefault();
     console.log(appointment)
-    fetch("http://localhost:3030/api/appointment/createAppointment",{
+    fetch("/api/appointment/createAppointment",{
       method:"POST",
       headers: { "Content-Type": "application/json" },
       

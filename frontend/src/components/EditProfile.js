@@ -14,7 +14,7 @@ const EditProfile = () => {
   };
 
   useEffect(() => {
-    fetch(`http://localhost:3030/api/user/getUserByEmail/${user.email}`)
+    fetch(`/api/user/getUserByEmail/${user.email}`)
       .then((res) => {
         return res.json();
       })
@@ -29,7 +29,7 @@ const EditProfile = () => {
   //#region UpdateUser
   const updateUser = (evt) => {
     evt.preventDefault();
-    fetch(`http://localhost:3030/api/user/updateUser/${updatedUser._id}`,
+    fetch(`/api/user/updateUser/${updatedUser._id}`,
           { method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(updatedUser),
