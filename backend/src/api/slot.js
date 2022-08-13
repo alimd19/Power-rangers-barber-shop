@@ -50,6 +50,7 @@ router.post("/getSlots", async (req, res, next) => {
 
     const bookedAppointments = await Appointment.find({
       barber,
+      status:"scheduled",
       date: {
         $gt: dateBefore,
         $lt: dateAfter,
