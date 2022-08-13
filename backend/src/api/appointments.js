@@ -27,7 +27,9 @@ router.get("/getAppointment", async (req, res, next) => {
 router.post("/createAppointment", async (req, res, next) => {
   const appointmentDate = new Date(req.body.date);
   const serverDate = new Date();
-
+  //Changes by Nirmal 
+  appointmentDate.setUTCHours(0,0,0,0);
+  // Changes end By Nirmal
   const { timeSlot, barber, services, customer } = req.body;
 
   if (!barber || services.length < 1 || !timeSlot || !customer) {
@@ -64,9 +66,6 @@ router.put("/deleteAppointment", async (req, res, next) => {
 
 router.get("/getAppointmentsByDateAndBarber", async (req, res, next) => {
   const { barber, date } = req.query;
-  console.log(barber);
-  console.log(date);
-
   if (barber == "" || date == "") {
     res.status(400).json({ message: "Invalid Request" });
   } else {
