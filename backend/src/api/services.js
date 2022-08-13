@@ -1,8 +1,8 @@
 const router = require("express").Router();
 const { Service } = require("../db/models");
 
-router.get("/getService", async (req, res, next) => {
-  const services = await Service.find({}).exec();
+router.get("/getServices", async (req, res, next) => {
+  const services = await Service.find({});
   res.send({ services });
 });
 

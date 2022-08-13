@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { Schedule, User } = require("../db/models");
+const { Schedule, User, Slot } = require("../db/models");
 
 router.get("/getSchedules", async (req, res, next) => {
   const schedules = await Schedule.find({});
@@ -148,6 +148,22 @@ router.patch("/updateStatus", async (req, res, next) => {
       res.status(400).json({ message: "Please provide a valid schedule id" });
       return;
     }
+
+    await Slot.deleteMany({ barber: updatedSchedule.barber });
+
+    updatedSchedule.availability.forEach(async (day) => {
+      for (let i = day.startTime; i < day.endTime; i++) {
+        const display = `${i <= 12 ? i : i - 12} ${i < 12 ? "am" : "pm"} to ${
+          i < 12 ? i + 1 :  i - 11
+        } ${i < 11 ? "am" : "pm"}`;
+
+        await Slot.create({
+          barber: updatedSchedule.barber,
+          display,
+          day: day.day,
+        });
+      }
+    });
 
     res.status(200).json({ schedule: updatedSchedule });
   } catch (err) {

@@ -16,7 +16,7 @@ const EditProfile = () => {
   const submitHandler = (evt) => {
     evt.preventDefault();
     console.log(updatedUser);
-    fetch(`http://localhost:3030/api/user/getUserByEmail/${user.email}`)
+    fetch(`/api/user/getUserByEmail/${user.email}`)
       .then((res) => {
         return res.json();
       })

@@ -22,47 +22,25 @@ router.get("/getAppointment", async (req, res, next) => {
 
   res.json({ appointments }).status(200);
 });
-function isNumeric(num) {
-  return !isNaN(num);
-}
 
 router.post("/createAppointment", async (req, res, next) => {
-  let userTime = new Date(req.body.date);
-  let serverTime = new Date();
-  serverTime.setDate(serverTime.getDate() - 1);
-  let startTime = req.body.timeSlot.startTime;
-  let endTime = req.body.timeSlot.endTime;
-  let barber = req.body.barber;
-  let service = req.body.services;
+  const appointmentDate = new Date(req.body.date);
+  const serverDate = new Date();
 
-  if (
-    barber.length === 0 ||
-    Object.keys(service).length === 0 ||
-    endTime.length === 0 ||
-    startTime === 0
-  ) {
+  const { timeSlot, barber, services, customer } = req.body;
+
+  if (!barber || services.length < 1 || !timeSlot || !customer) {
     res.status(400).json({ message: "Don't leave empty fields" });
   } else {
-    if (userTime < serverTime) {
+    if (appointmentDate < serverDate) {
       res.status(400).json({ message: "Please select a valid date" });
     } else {
-      if (isNumeric(endTime) && isNumeric(startTime)) {
-        let parsEndTime = parseInt(endTime, 10);
-        let parsStartTime = parseInt(startTime, 10);
-        if (parsEndTime > parsStartTime) {
-          const appointments = await Appointment.create(req.body);
-          res.send({ appointments }).status(200);
-          console.log(appointments);
-        } else {
-          res
-            .status(400)
-            .json({
-              message:
-                "Please the Start Time should be smaller then the End Time",
-            });
-        }
-      } else {
-        res.status(400).json({ message: "You entered a wrong input type !" });
+      req.body.status = "scheduled";
+      try {
+        const appointment = await Appointment.create(req.body);
+        res.send({ appointment }).status(200);
+      } catch (err) {
+        res.status(500).json({ message: err.message });
       }
     }
   }

@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { User } = require("../db/models");
+const { User, Schedule } = require("../db/models");
 
 router.get("/getUser/:id", async (req, res, next) => {
   const id = req.params.id;
@@ -11,13 +11,28 @@ router.get("/getUser/:id", async (req, res, next) => {
   }
 });
 
-router.get("/getUserByType/:usertype", async (req, res, next) => {
-  const usertype = req.params.usertype;
-  if (usertype != "") {
-    const user = await User.find({ userType: usertype }).exec();
+router.get("/getUserByType/:userType", async (req, res, next) => {
+  const userType = req.params.userType;
+  if (userType != "") {
+    const user = await User.find({ userType });
     res.status(200).json({ user });
   } else {
     res.status(400).json({ message: "Invalid Request" });
+  }
+});
+
+router.get("/getActiveBarbers", async (req, res, next) => {
+  try {
+    const schedules = await Schedule.find({ status: "approved" }).populate({
+      path: "barber",
+      select: "fname lname",
+    });
+
+    const barbers = schedules.map((item) => item.barber);
+
+    res.status(200).json({ barbers });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 });
 

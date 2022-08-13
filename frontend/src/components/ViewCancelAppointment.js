@@ -21,7 +21,7 @@ const ViewCancelAppointment = () => {
   const { user } = useContext(UserContext);
   useEffect(() => {
 
-    fetch("http://localhost:3030/api/user/getUserByType/bb")
+    fetch("/api/user/getUserByType/bb")
       .then((res) => {
         return res.json();
       })
@@ -103,7 +103,6 @@ const ViewCancelAppointment = () => {
                 label="Appointment Date"
                 value={appointmentDate}
                 onChange={(newValue) => {
-                  console.log(newValue)
                   setAppointmentDate(newValue);
                 }}
                 renderInput={(params) => <TextField {...params} />}

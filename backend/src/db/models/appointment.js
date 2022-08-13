@@ -4,20 +4,7 @@ const AppointmentSchema = new mongoose.Schema({
   barber: { type: mongoose.Types.ObjectId, ref: "User", required: true },
   customer: { type: mongoose.Types.ObjectId, ref: "User", required: true },
   date: { type: Date, required: true },
-  timeSlot: {
-    startTime: {
-      type: Number,
-      required: true,
-      min: 1,
-      max: 24,
-    },
-    endTime: {
-      type: Number,
-      required: true,
-      min: 1,
-      max: 24,
-    },
-  },
+  timeSlot: { type: mongoose.Types.ObjectId, ref: "Slot", required: true },
   status: {
     type: String,
     required: true,
