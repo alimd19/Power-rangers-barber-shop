@@ -164,16 +164,19 @@ const BookAppointment = () => {
         <Alert severity="success">Appointment created successfully!</Alert>
       )}
       {error && <Alert severity="error">{error}</Alert>}
-      <div className="viewfield">
-        <DatePicker
-          label="Appointment Date"
-          value={appointmentDate}
-          onChange={(newValue) => {
-            setAppointmentDate(newValue);
-          }}
-          renderInput={(params) => <TextField {...params} />}
-        />
-      </div>
+      <center>
+        <div className="viewfield">
+          <DatePicker
+            label="Appointment Date"
+            value={appointmentDate}
+            onChange={(newValue) => {
+              setAppointmentDate(newValue);
+            }}
+            renderInput={(params) => <TextField {...params} />}
+          />
+        </div>{" "}
+      </center>
+      <br />
       <FormControl sx={{ m: 1, width: 300 }}>
         <InputLabel id="services-select-label">Services</InputLabel>
         <Select
@@ -247,9 +250,12 @@ const BookAppointment = () => {
         </Select>
         <FormHelperText>Please select a slot</FormHelperText>
       </FormControl>
-      <Button variant="contained" onClick={handleSubmit}>
-        Submit
-      </Button>
+      <br />
+      <center>
+        <Button variant="contained" onClick={handleSubmit}>
+          Submit
+        </Button>
+      </center>
     </div>
   );
 };
