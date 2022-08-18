@@ -10,14 +10,14 @@ export default function NavBar() {
       <ul>
         <CustomLink to="/about">About</CustomLink>
         <CustomLink to="/register">Register</CustomLink>
-        <CustomLink to="/log-in">Login</CustomLink>
+        <CustomLink to="/login">Login</CustomLink>
       </ul>
     </nav>
   );
 }
 function CustomLink({ to, children, ...props }) {
-  const resolevedPath = useResolvedPath(to);
-  const isActive = useMatch({ path: resolevedPath.pathname, end: true });
+  const resolvedPath = useResolvedPath(to);
+  const isActive = useMatch({ path: resolvedPath.pathname, end: true });
   return (
     <li className={isActive ? "active" : ""}>
       <Link to={to} {...props}>

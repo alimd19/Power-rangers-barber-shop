@@ -52,6 +52,8 @@ const BookAppointment = () => {
   const [selectedSlot, setSelectedSlot] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const [email, setEmail] = useState("");
+  const [customer, setCustomer] = useState({});
 
   const handleServices = (event) => {
     setError("");
@@ -62,11 +64,23 @@ const BookAppointment = () => {
     );
   };
 
+  const handleEmail = (e) => {
+    setEmail(e.target.value);
+  };
+
   const handleSubmit = () => {
     if (appointmentDate > new Date()) {
       if (selectedServices.length > 0) {
         if (selectedBarber) {
           if (selectedSlot) {
+            if (email && !customer._id) {
+              setError("Please provide a valid customer email address");
+              return;
+            } else if (!email && user.userType === "mg") {
+              setError("Cannot leave customer email address empty");
+              return;
+            }
+
             fetch("/api/appointment/createAppointment", {
               method: "POST",
               headers: {
@@ -74,7 +88,7 @@ const BookAppointment = () => {
               },
               body: JSON.stringify({
                 barber: selectedBarber,
-                customer: user.id,
+                customer: email ? customer._id : user.id,
                 date: appointmentDate.toDateString(),
                 timeSlot: selectedSlot,
                 services: selectedServices.map((service) => service._id),
@@ -157,6 +171,24 @@ const BookAppointment = () => {
         console.log(`Error ${err}`);
       });
   }, [selectedBarber, appointmentDate]);
+
+  useEffect(() => {
+    setError("");
+
+    const regexExp = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
+
+    if (regexExp.test(email)) {
+      fetch(`/api/user/getUserByEmail/${email}`)
+        .then((res) => res.json())
+        .then((json) => {
+          if (json.message) {
+            setError("User with given email not found");
+          } else {
+            setCustomer(json.user);
+          }
+        });
+    }
+  }, [email]);
 
   return (
     <div>
@@ -250,6 +282,18 @@ const BookAppointment = () => {
         </Select>
         <FormHelperText>Please select a slot</FormHelperText>
       </FormControl>
+      {user.userType === "mg" && (
+        <FormControl>
+          <TextField
+            labelId="user-email-input-label"
+            label="Customer Email"
+            id="customer-email"
+            value={email}
+            onChange={handleEmail}
+          />
+          <FormHelperText>Please enter customer's email id</FormHelperText>
+        </FormControl>
+      )}
       <br />
       <center>
         <Button variant="contained" onClick={handleSubmit}>

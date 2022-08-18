@@ -17,6 +17,27 @@ import { Link, useMatch, useNavigate, useResolvedPath } from "react-router-dom";
 import { useLogout } from "../../hooks/useLogout";
 
 const drawerWidth = 240;
+const paths = {
+  mg: [
+    { link: "Appointments", path: "/appointment" },
+    { link: "My Appointments", path: "/userAppointments" },
+    { link: "Book Appointment", path: "/booking" },
+    { link: "Profile Setup", path: "/profile" },
+    { link: "Schedule Form", path: "/scheduleForm" },
+    { link: "Barbers", path: "/barbers" },
+  ],
+  bb: [
+    { link: "Appointments", path: "/appointment" },
+    { link: "My Appointments", path: "/userAppointments" },
+    { link: "Profile Setup", path: "/profile" },
+    { link: "Schedule Form", path: "/scheduleForm" },
+  ],
+  cs: [
+    { link: "My Appointments", path: "/userAppointments" },
+    { link: "Book Appointment", path: "/booking" },
+    { link: "Profile Setup", path: "/profile" },
+  ],
+};
 
 export default function NavBar({ children }) {
   const navigate = useNavigate();
@@ -81,13 +102,7 @@ export default function NavBar({ children }) {
           <Toolbar />
           <Box className="user-nav">
             <List>
-              {[
-                { link: "Appointments", path: "/appointment" },
-                { link: "Appointment History", path: "/appointmenthistory" },
-                { link: "Book Appointment", path: "/booking" },
-                { link: "Profile Setup", path: "/profile" },
-                { link: "Schedule Form", path: "/scheduleForm" },
-              ].map((text, index) => (
+              {paths[user.userType].map((text, index) => (
                 <ListItem className="list" key={index}>
                   <CustomLink to={text.path}>{text.link}</CustomLink>
                 </ListItem>
@@ -105,8 +120,8 @@ export default function NavBar({ children }) {
 }
 
 function CustomLink({ to, children, ...props }) {
-  const resolevedPath = useResolvedPath(to);
-  const isActive = useMatch({ path: resolevedPath.pathname, end: true });
+  const resolvedPath = useResolvedPath(to);
+  const isActive = useMatch({ path: resolvedPath.pathname, end: true });
   return (
     <li className={isActive ? "active" : ""}>
       <Link to={to} {...props}>

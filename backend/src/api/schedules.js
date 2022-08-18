@@ -10,7 +10,10 @@ router.get("/getScheduleByBarber/:barber", async (req, res, next) => {
   const barber = req.params.barber;
 
   try {
-    const schedule = await Schedule.findOne({ barber: barber });
+    const schedule = await Schedule.findOne({ barber: barber }).populate({
+      path: "barber",
+      select: ["fname", "lname", "email"],
+    });
 
     if (!schedule) {
       res.status(400).json({ message: "Please enter a valid barber id" });
@@ -121,10 +124,10 @@ router.patch("/updateSchedule", async (req, res, next) => {
 });
 
 router.patch("/updateStatus", async (req, res, next) => {
-  const { schedule_id, user_id } = req.body;
+  const { schedule_id, user_id, status } = req.body;
 
-  if ((!schedule_id, !user_id)) {
-    res.status(400).json({ message: "Please send all the required fields" });
+  if (!schedule_id || !user_id || !status) {
+    res.status(400).json({ message: "Please provide all the required fields" });
     return;
   }
 
@@ -139,7 +142,7 @@ router.patch("/updateStatus", async (req, res, next) => {
     const updatedSchedule = await Schedule.findByIdAndUpdate(
       schedule_id,
       {
-        status: "approved",
+        status,
       },
       { returnDocument: "after" }
     );
@@ -151,19 +154,21 @@ router.patch("/updateStatus", async (req, res, next) => {
 
     await Slot.deleteMany({ barber: updatedSchedule.barber });
 
-    updatedSchedule.availability.forEach(async (day) => {
-      for (let i = day.startTime; i < day.endTime; i++) {
-        const display = `${i <= 12 ? i : i - 12} ${i < 12 ? "am" : "pm"} to ${
-          i < 12 ? i + 1 :  i - 11
-        } ${i < 11 ? "am" : "pm"}`;
+    if (updatedSchedule.status === "approved") {
+      updatedSchedule.availability.forEach(async (day) => {
+        for (let i = day.startTime; i < day.endTime; i++) {
+          const display = `${i <= 12 ? i : i - 12} ${i < 12 ? "am" : "pm"} to ${
+            i < 12 ? i + 1 : i - 11
+          } ${i < 11 ? "am" : "pm"}`;
 
-        await Slot.create({
-          barber: updatedSchedule.barber,
-          display,
-          day: day.day,
-        });
-      }
-    });
+          await Slot.create({
+            barber: updatedSchedule.barber,
+            display,
+            day: day.day,
+          });
+        }
+      });
+    }
 
     res.status(200).json({ schedule: updatedSchedule });
   } catch (err) {

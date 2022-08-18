@@ -27,10 +27,7 @@ router.get("/getAppointment", async (req, res, next) => {
 router.post("/createAppointment", async (req, res, next) => {
   const appointmentDate = new Date(req.body.date);
   const serverDate = new Date();
-  //Changes by Nirmal 
-  appointmentDate.setUTCHours(0,0,0,0);
-  req.body.date=appointmentDate
-  // Changes end By Nirmal
+
   const { timeSlot, barber, services, customer } = req.body;
 
   if (!barber || services.length < 1 || !timeSlot || !customer) {
@@ -50,26 +47,30 @@ router.post("/createAppointment", async (req, res, next) => {
   }
 });
 
-router.put("/deleteAppointment", async (req, res, next) => {
-  const id = req.query.id;
+router.put("/changeStatus", async (req, res, next) => {
+  const { id, status } = req.query;
+
+  if (!id || !status) {
+    res.status(400).json({ message: "Don't leave empty fields" });
+    return;
+  }
+
   try {
-    await Appointment.updateOne({ _id: id }, [
-      { $set: { status: "cancelled" } },
-    ]);
-    res.status(200).json({ message: "Appointment cancelled successfuly !" });
+    await Appointment.updateOne({ _id: id }, { status });
+    res.status(200).json({ message: "Status updated successfully!" });
   } catch (err) {
     res
-      .status(400)
+      .status(500)
       .json({ message: "Your appointment could not be cancelled!" });
     return;
   }
 });
 
 router.get("/getAppointmentsByDateAndBarber", async (req, res, next) => {
-  const { barber,date } = req.query;
+  const { barber, date } = req.query;
   //Changes Nirmal
-  var d2 = new Date(date).setUTCHours(0, 0, 0, 0);  
- 
+  var d2 = new Date(date).setUTCHours(0, 0, 0, 0);
+
   if (barber == "" || date == "") {
     res.status(400).json({ message: "Invalid Request" });
   } else {
@@ -77,14 +78,16 @@ router.get("/getAppointmentsByDateAndBarber", async (req, res, next) => {
       barber,
       date: d2,
       status: "scheduled",
-    }).populate({
-      path: "customer",
-      select: ["fname", "lname"],
-    }).populate({
-      path: "timeSlot",
-      select:["display"]
-    });
-     //Changes Nirmal End
+    })
+      .populate({
+        path: "customer",
+        select: ["fname", "lname"],
+      })
+      .populate({
+        path: "timeSlot",
+        select: ["display"],
+      });
+    //Changes Nirmal End
     if (appointments.length > 0) {
       res.status(200).json({ appointments });
     } else {

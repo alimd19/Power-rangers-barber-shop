@@ -64,7 +64,6 @@ router.post("/getSlots", async (req, res, next) => {
     const slots = await Slot.find({
       barber,
       day: days[parsedDate.getDay()],
-      // day: "Monday",
       _id: { $nin: processedAppointments },
     }).select("display");
 

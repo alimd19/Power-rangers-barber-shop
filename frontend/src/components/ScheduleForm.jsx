@@ -52,6 +52,7 @@ const ScheduleForm = () => {
   const [schedule, setSchedule] = useState("");
 
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [status, setStatus] = useState("");
   const [availability, setAvailability] = useState([
     { day: "Monday", startTime: 9, endTime: 13 },
@@ -179,6 +180,7 @@ const ScheduleForm = () => {
             } else {
               setAvailability(json.schedule.availability);
               setStatus(json.schedule.status);
+              setSuccess("Schedule updated successfully!");
             }
           })
           .catch((err) => console.log(err));
@@ -200,10 +202,16 @@ const ScheduleForm = () => {
             } else {
               setAvailability(json.schedule.availability);
               setStatus(json.schedule.status);
+              setSuccess("Schedule created successfully!");
             }
           })
           .catch((err) => console.log(err));
       }
+
+      setTimeout(() => {
+        setError("");
+        setSuccess("");
+      }, 5000);
     } else {
       setError("Start time cannot be greater than end time");
     }
@@ -214,9 +222,7 @@ const ScheduleForm = () => {
       fetch(`/api/schedule/getScheduleByBarber/${user.id}`)
         .then((res) => res.json())
         .then((json) => {
-          if (json.message) {
-            setError(json.message);
-          } else {
+          if (!json.message) {
             setAvailability(json.schedule.availability);
             setStatus(json.schedule.status);
             setSchedule(json.schedule._id);
@@ -264,6 +270,7 @@ const ScheduleForm = () => {
         </Fade>
       </Modal>
       {error && <Alert severity="error">{error}</Alert>}
+      {success && <Alert severity="success">{success}</Alert>}
       <Grid container sx={{ p: 4 }}>
         {status && (
           <Grid item xs={9}>

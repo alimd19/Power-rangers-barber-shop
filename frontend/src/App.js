@@ -10,10 +10,10 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import EditProfile from "./components/EditProfile";
-import ViewCancelAppointment from "./components/ViewCancelAppointment";
 import BookAppointment from "./components/BookAppointment";
-import MyBooking from "./components/MyBooking";
+import Appointments from "./components/Appointments";
 import ScheduleForm from "./components/ScheduleForm";
+import Barbers from "./components/Barbers";
 
 const color = "#000";
 const theme = createTheme({
@@ -79,16 +79,20 @@ function App() {
               <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/about" element={<AboutUs />} />
-                <Route path="/log-in" element={<Login />} />
+                <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/booking" element={<BookAppointment />} />
                 <Route path="/profile" element={<EditProfile />}></Route>
                 <Route
-                  path="/appointmenthistory"
-                  element={<ViewCancelAppointment />}
+                  path="/userAppointments"
+                  element={<Appointments type="customer" />}
                 ></Route>
-                <Route path="/appointment" element={<MyBooking />} />
+                <Route
+                  path="/appointment"
+                  element={<Appointments type="barber" />}
+                />
                 <Route path="/scheduleForm" element={<ScheduleForm />} />
+                <Route path="/barbers" element={<Barbers />} />
               </Routes>
             </Layout>
           </UserProvider>
