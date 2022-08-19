@@ -1,14 +1,24 @@
-import React from 'react'
-import image from '../img/power.gif'
-import { Link } from 'react-router-dom'
+import React, { useContext } from "react";
+import image from "../img/power.gif";
+import { Link, useNavigate } from "react-router-dom";
+import { UserContext } from "../contexts/UserContext";
 
 const HomePage = () => {
-  return (
-    <div className='home-page'>
-      <img className='home-logo' src={image}  alt="logo" ></img>
-      <Link style={{textDecoration: 'none'}}  to='/log-in'  ><h4 className='home-book'>Book Appointment</h4></Link>
-    </div>
-  )
-}
+  const { user } = useContext(UserContext);
+  const navigate = useNavigate();
 
-export default HomePage
+  if (user.id) {
+    navigate("/userAppointments");
+  } else {
+    return (
+      <div className="home-page">
+        <img className="home-logo" src={image} alt="logo"></img>
+        <Link style={{ textDecoration: "none" }} to="/log-in">
+          <h4 className="home-book">Book Appointment</h4>
+        </Link>
+      </div>
+    );
+  }
+};
+
+export default HomePage;

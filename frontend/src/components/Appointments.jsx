@@ -103,7 +103,7 @@ const Appointments = ({ type }) => {
                   Date: {new Date(booking.date).toDateString()}
                 </Typography>
                 <Typography variant="h6">
-                  Time: {booking.timeSlot.display}
+                  Time: {booking.timeSlot?.display || "Time slot not available"}
                 </Typography>
                 {statusFilter === "scheduled" && (
                   <>

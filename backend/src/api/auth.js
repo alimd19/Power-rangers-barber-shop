@@ -1,17 +1,8 @@
 const router = require("express").Router();
 const bcrypt = require("bcrypt");
 const validator = require("validator");
-const jwt = require("jsonwebtoken");
 
 const { User } = require("../db/models");
-
-// jwt generator function
-const createToken = (id, userType) => {
-  const newToken = jwt.sign({ id, userType }, "powerrangers", {
-    expiresIn: "1h",
-  });
-  return newToken;
-};
 
 //Login route
 router.post("/login", async (req, res, next) => {
@@ -35,12 +26,10 @@ router.post("/login", async (req, res, next) => {
   if (!match) {
     res.status(400).json({ message: "Invalid credentials" });
   } else {
-    // creating token
-    const token = createToken(user._id, user.userType);
 
     res
       .status(200)
-      .json({ id: user._id, email, token, userType: user.userType });
+      .json({ id: user._id, email, userType: user.userType });
   }
 });
 
@@ -58,11 +47,6 @@ router.post("/signup", async (req, res, next) => {
     res.status(400).json({ message: "Invalid email" });
     return;
   }
-
-  // if (!validator.isStrongPassword(password)) {
-  //   res.status(400).json({ message: "Please use a strong password" });
-  //   return;
-  // }
 
   const exists = await User.findOne({ email });
 
@@ -86,12 +70,9 @@ router.post("/signup", async (req, res, next) => {
       userType,
     });
 
-    // creating token
-    const token = createToken(user._id, user.userType);
-
     res
       .status(200)
-      .json({ id: user._id, email, token, userType: user.userType });
+      .json({ id: user._id, email, userType: user.userType });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }

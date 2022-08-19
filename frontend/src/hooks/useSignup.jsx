@@ -31,7 +31,11 @@ export const useSignup = () => {
 
       setIsLoading(false);
 
-      navigate("/appointment");
+      if (json.userType === "cs") {
+        navigate("/userAppointments");
+      } else {
+        navigate("/appointment");
+      }
     }
   };
 
