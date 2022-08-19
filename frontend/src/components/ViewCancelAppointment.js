@@ -29,7 +29,6 @@ const ViewCancelAppointment = () => {
         return res.json();
       })
       .then((json) => {
-        console.log("Nirmal")
         setBarberNames(json.user)
       })
       .catch((err) => {
@@ -42,7 +41,7 @@ const ViewCancelAppointment = () => {
   //Cancel all the Appointment for a particular day based on Date and Barber
   const onCancelAllAppointment = () => {
     let date= new Date(appointmentDate);
-    fetch(`/api/appointment/deleteAppointmentByDateAndBarber?date=${appointmentDate}&barber=${barberName}`, { method: "PUT" })
+    fetch(`/api/appointment/deleteAppointmentByDateAndBarber?date=${appointmentDate.toDateString()}&barber=${barberName}`, { method: "PUT" })
       .then((res) => {
         return res.json();
       }).then((json)=>{
@@ -100,7 +99,7 @@ const ViewCancelAppointment = () => {
       headers: { "Content-Type": "application/json" },
       body: null
     })
-    fetch(`/api/appointment/getAppointmentsByDateAndBarber?date=${appointmentDate}&barber=${barberName}`)
+    fetch(`/api/appointment/getAppointmentsByDateAndBarber?date=${appointmentDate.toDateString()}&barber=${barberName}`)
       .then((res) => {
         return res.json();
       })
