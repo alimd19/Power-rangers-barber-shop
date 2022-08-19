@@ -85,9 +85,7 @@ const Appointments = ({ type }) => {
       </FormControl>
       <Grid container spacing={3} sx={{ mt: 2 }}>
         {bookings.map((booking) => {
-          console.log( booking.date);
           const date = new Date(booking.date);
-          console.log(date.setUTCHours(0, 0, 0, 0));
           return (
             <Grid item xs={6} key={booking._id}>
               <Box
@@ -106,7 +104,7 @@ const Appointments = ({ type }) => {
                     Booking Id: {booking._id}
                   </Typography>
                   <Typography variant="h6">
-                    Date: {date.toDateString()}
+                    Date: {date.toUTCString().slice(0, 16)}
                   </Typography>
                   <Typography variant="h6">
                     Time:{" "}
