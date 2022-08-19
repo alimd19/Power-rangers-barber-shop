@@ -43,7 +43,6 @@ const Appointments = ({ type }) => {
   };
 
   useEffect(() => {
-
     if (user.id) {
       fetch(`/api/appointment/getAppointment?type=${type}&userId=${user.id}`)
         .then((res) => {
@@ -85,51 +84,63 @@ const Appointments = ({ type }) => {
         </Select>
       </FormControl>
       <Grid container spacing={3} sx={{ mt: 2 }}>
-        {bookings.map((booking) => (
-          <Grid item xs={6} key={booking._id}>
-            <Box
-              sx={{
-                backgroundColor: "#000000",
-                color: "wheat",
-                borderRadius: "25px",
-                minWidth: "450px",
-              }}
-            >
-              <Box sx={{ p: 2 }}>
-                <Typography variant="h6">
-                  Barber: {booking.barber.fname + " " + booking.barber.lname}
-                </Typography>
-                <Typography variant="h6">Booking Id: {booking._id}</Typography>
-                <Typography variant="h6">
-                  Date: {new Date(booking.date).toDateString()}
-                </Typography>
-                <Typography variant="h6">
-                  Time: {booking.timeSlot?.display || "Time slot not available"}
-                </Typography>
-                {statusFilter === "scheduled" && (
-                  <>
-                    <Button
-                      sx={{ backgroundColor: "wheat", color: "black", mt: 2 }}
-                      variant="contained"
-                      onClick={() => handleStatus("cancelled", booking._id)}
-                    >
-                      Cancel Appointment
-                    </Button>
-                    {user.userType !== "cs" && (
+        {bookings.map((booking) => {
+          console.log( booking.date);
+          const date = new Date(booking.date);
+          console.log(date.setUTCHours(0, 0, 0, 0));
+          return (
+            <Grid item xs={6} key={booking._id}>
+              <Box
+                sx={{
+                  backgroundColor: "#000000",
+                  color: "wheat",
+                  borderRadius: "25px",
+                  minWidth: "450px",
+                }}
+              >
+                <Box sx={{ p: 2 }}>
+                  <Typography variant="h6">
+                    Barber: {booking.barber.fname + " " + booking.barber.lname}
+                  </Typography>
+                  <Typography variant="h6">
+                    Booking Id: {booking._id}
+                  </Typography>
+                  <Typography variant="h6">
+                    Date: {date.toDateString()}
+                  </Typography>
+                  <Typography variant="h6">
+                    Time:{" "}
+                    {booking.timeSlot?.display || "Time slot not available"}
+                  </Typography>
+                  {statusFilter === "scheduled" && (
+                    <>
                       <Button
                         sx={{ backgroundColor: "wheat", color: "black", mt: 2 }}
                         variant="contained"
-                        onClick={() => handleStatus("completed", booking._id)}
+                        onClick={() => handleStatus("cancelled", booking._id)}
                       >
-                        Mark Complete
+                        Cancel Appointment
                       </Button>
-                    )}
-                  </>
-                )}
+                      {user.userType !== "cs" && (
+                        <Button
+                          sx={{
+                            backgroundColor: "wheat",
+                            color: "black",
+                            mt: 2,
+                          }}
+                          variant="contained"
+                          onClick={() => handleStatus("completed", booking._id)}
+                        >
+                          Mark Complete
+                        </Button>
+                      )}
+                    </>
+                  )}
+                </Box>
               </Box>
-            </Box>
-          </Grid>
-        ))}
+            </Grid>
+          );
+        })}
       </Grid>
     </div>
   );
