@@ -214,4 +214,13 @@ body{
     justify-content: center;
     display: flex;
    }
+   .notfound{
+    margin:auto;
+    width: 40%;
+    
+  }
+  .route-image{
+    width: 700px;
+    height: 600px;
+  }
   

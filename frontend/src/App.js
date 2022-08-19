@@ -15,6 +15,7 @@ import Appointments from "./components/Appointments";
 import ScheduleForm from "./components/ScheduleForm";
 import Barbers from "./components/Barbers";
 import ViewCancelAppointment from "./components/ViewCancelAppointment";
+import NotFound from "./pages/NotFound";
 
 const color = "#000";
 const theme = createTheme({
@@ -84,6 +85,7 @@ function App() {
                 <Route path="/register" element={<Register />} />
                 <Route path="/booking" element={<BookAppointment />} />
                 <Route path="/profile" element={<EditProfile />}></Route>
+                <Route path="*" element={<NotFound/>}/>
                 <Route
                   path="/userAppointments"
                   element={<Appointments type="customer" />}
