@@ -62,9 +62,10 @@ const ViewCancelAppointment = () => {
   //All Appointments for particular date and Barber Name
   const getAppointments = (evt) => {
     evt.preventDefault();
+
     if (appointmentDate != null && barberName != '') {
       setMsg('');
-      fetch(`/api/appointment/getAppointmentsByDateAndBarber?date=${appointmentDate}&barber=${barberName}`)
+      fetch(`/api/appointment/getAppointmentsByDateAndBarber?date=${appointmentDate.toDateString()}&barber=${barberName}`)
         .then((res) => {
           return res.json();
         })

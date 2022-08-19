@@ -43,6 +43,7 @@ const Appointments = ({ type }) => {
   };
 
   useEffect(() => {
+
     if (user.id) {
       fetch(`/api/appointment/getAppointment?type=${type}&userId=${user.id}`)
         .then((res) => {
