@@ -100,9 +100,7 @@ router.put("/changeStatus", async (req, res, next) => {
 
 router.get("/getAppointmentsByDateAndBarber", async (req, res, next) => {
   const { barber, date } = req.query;
-  //Changes Nirmal
-  //var d2 = new Date(date);
-  console.log(date);
+  
   if (barber == "" || date == "") {
     res.status(400).json({ message: "Invalid Request" });
   } else {

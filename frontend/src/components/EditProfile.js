@@ -14,13 +14,11 @@ const EditProfile = () => {
   };
 
   useEffect(() => {
-    console.log()
     fetch(`/api/user/getUserByEmail/${user.email}`)
       .then((res) => {
         return res.json();
       })
       .then((json)=>{
-        console.log(json.user)
         setUpdatedUsers(json.user);
       })
       .catch(err=>{
