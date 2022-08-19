@@ -104,6 +104,7 @@ body{
       align-items: stretch;
       gap: 2rem;
       padding: 0 1rem;
+     
   }
   
   
@@ -142,7 +143,7 @@ body{
     height: 100%;
     color: #f5deb3 ;
     text-decoration: none;
-    overflow-y:hidden;
+    overflow-y: scroll;
   }
   
   .user-nav a{
