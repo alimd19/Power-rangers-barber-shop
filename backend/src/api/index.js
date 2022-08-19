@@ -14,4 +14,5 @@ router.use("/appointment", appointment);
 router.use("/user", user);
 router.use("/slot", slot);
 
+
 module.exports = router;

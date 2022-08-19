@@ -29,6 +29,16 @@ router.get("/getUserByType/:userType", async (req, res, next) => {
   }
 });
 
+router.get("/getBarber", async (req, res, next) => {
+  const userType = "bb";
+  if (userType != "") {
+    const user = await User.find({ userType });
+    res.status(200).json({ user });
+  } else {
+    res.status(400).json({ message: "Invalid Request" });
+  }
+});
+
 router.get("/getActiveBarbers", async (req, res, next) => {
   try {
     const schedules = await Schedule.find({ status: "approved" }).populate({
