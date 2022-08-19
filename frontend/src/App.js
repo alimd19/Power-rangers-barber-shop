@@ -14,6 +14,7 @@ import BookAppointment from "./components/BookAppointment";
 import Appointments from "./components/Appointments";
 import ScheduleForm from "./components/ScheduleForm";
 import Barbers from "./components/Barbers";
+import ViewCancelAppointment from "./components/ViewCancelAppointment";
 
 const color = "#000";
 const theme = createTheme({
@@ -92,6 +93,7 @@ function App() {
                   element={<Appointments type="barber" />}
                 />
                 <Route path="/scheduleForm" element={<ScheduleForm />} />
+                <Route path="/viewcancelappointment" element={<ViewCancelAppointment />} />
                 <Route path="/barbers" element={<Barbers />} />
               </Routes>
             </Layout>

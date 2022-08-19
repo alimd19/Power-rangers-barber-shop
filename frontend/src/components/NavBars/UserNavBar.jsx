@@ -24,6 +24,7 @@ const paths = {
     { link: "Book Appointment", path: "/booking" },
     { link: "Profile Setup", path: "/profile" },
     { link: "Schedule Form", path: "/scheduleForm" },
+    { link: "View / Cancel Barber's Appointment", path: "/viewcancelappointment" },
     { link: "Barbers", path: "/barbers" },
   ],
   bb: [
